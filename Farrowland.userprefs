@@ -1,10 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Attributes.js">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\FUK_U.js">
     <Files>
-      <File FileName="Assets\Attributes.js" Line="29" Column="61" />
-      <File FileName="Assets\Hero.js" Line="12" Column="2" />
-      <File FileName="Assets\Monster.js" Line="14" Column="2" />
+      <File FileName="Assets\FUK_U.js" Line="11" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

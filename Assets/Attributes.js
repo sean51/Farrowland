@@ -7,41 +7,59 @@ public class Attributes extends MonoBehaviour{
 	var magicDamage : int;
 	var isAlive : boolean;
 	// lets you know if the character is alive.
-	protected function boolean getAlive(){
+	protected function getAlive(): boolean
+	{
 		return isAlive;
 	}
-	protected function int getHealth(){
+	protected function getHealth(): int
+	{
 		return health;
 	}
-	protected function int getArmor() {
+	protected function getArmor(): int 
+	{
 		return armor;
 	}
-	protected function int getSpeed() {
+	protected function getSpeed(): int 
+	{
 		return speed;
 	}
-	protected function int getDamage() {//sadf
+	protected function getDamage(): int 
+	{//sadf
 		return damage;
 	}
-	protected function int getMagicDamage() {
+	protected function getMagicDamage(): int 
+	{
 		return magicDamage;
 	}
 	// set the Character to dead.
-	protected function boolean setAlive(theIsAlive : boolean) {
-		return isAlive = theIsAlive;
+	protected function setAlive(theIsAlive : boolean): boolean 
+	{
+		//return isAlive = theIsAlive;
+		return false;
 	}
-	protected function int setHealth(theHealth : int) {
-		return health = theHealth;
+	protected function setHealth(theHealth : int): int 
+	{
+		//return health = theHealth;
+		return 0;
 	}
-	protected function int setArmor(theArmor : int) {
-		return armor = theArmor;
+	protected function setArmor(theArmor : int): int 
+	{
+		//return armor = theArmor;
+		return 0;
 	}
-	protected function int setSpeed(theSpeed : int) {
-		return speed = theSpeed;
+	protected function setSpeed(theSpeed : int): int 
+	{
+		//return speed = theSpeed;
+		return 0;
 	}
-	protected function int setDamage(theDamage : int) {
-		return damage = theDamage;
+	protected function setDamage(theDamage : int): int 
+	{
+		//return damage = theDamage;
+		return 0;
 	}
-	protected function int setMagicDamage(theMagicDamage : int) {
-		return magicDamage = theMagicDamage;
+	protected function setMagicDamage(theMagicDamage : int): int 
+	{
+		//return magicDamage = theMagicDamage;
+		return 0;
 	}
 }
