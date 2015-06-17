@@ -19,7 +19,7 @@ public class Attributes extends MonoBehaviour{
 	protected function int getSpeed() {
 		return speed;
 	}
-	protected function int getDamage() {
+	protected function int getDamage() {//sadf
 		return damage;
 	}
 	protected function int getMagicDamage() {

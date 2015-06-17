@@ -6,7 +6,7 @@ public class Monster extends Attributes {
 	var damage : setDamage(5);
 	var magicDamage : setMagicDamage(5);
 	var isAlive : true;
-}
+}//sadf
 function TakeDamage(theDamageTaken : int) { 
 	setHealth(getHealth() - theDamageTaken);
 }

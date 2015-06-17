@@ -12,4 +12,4 @@ function TakeDamage(theDamageTaken : int) {
 }
 function int DealDamage() { 
 	GameObject.GetComponent<Monster>().SendMessage("TakeDamage", getDamage());
-}
+}//asdfsde
