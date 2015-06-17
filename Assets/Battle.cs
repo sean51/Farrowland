@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
-public class Battle {
+public class Battle : MonoBehaviour{
 	Attributes player;
 	Attributes [] heroes;
 	Attributes [] enemies;
@@ -14,7 +14,7 @@ public class Battle {
 	private int turnCounter;
 	
 	
-	public float turmTimer;
+	public float turnTimer;
 	
 	//This Constructor is called for Battle with only 1 hero.
 	public Battle(Attributes theHero, Attributes [] theEnemies){
@@ -52,6 +52,16 @@ public class Battle {
 			TakeTurn (peopleInPlay[turnCounter++]);
 			attacking = true;
 		}
+
+		foreach(Attributes a in peopleInPlay) {
+			if(!a.isAlive) {
+				if(a.name == "Hero") {
+					Debug.Log ("Player has died.");
+				} else {
+					Debug.Log ("enemy died");
+				}
+			}
+		}
 	}
 	
 	void TakeTurn(Attributes attacker) {
@@ -59,9 +69,9 @@ public class Battle {
 		if(attacker.name == "Hero"){		//Hero
 			myTurn = true;
 		} else if(attacker.name == "Monster"){	//Monster
-			Hero target = (Hero)heroes[0];
+			Monster target = (Monster)enemies[0];
 			target.takeDamage(attacker.damage);
-			attacking = false;
+			StartCoroutine(TurnTimer (turnTimer));
 		} else {	//Passive
 			attacking = false;
 		}
@@ -89,21 +99,25 @@ public class Battle {
 			if(GUI.Button (new Rect(10, 10, 80, 25), "Attack")){
 				Monster target = (Monster)heroes[heroes.Length];
 				target.takeDamage(player.damage);
+				StartCoroutine(TurnTimer (turnTimer));
 			}
 			if(GUI.Button (new Rect(10, 45, 80, 25), "Special")){
-				
+				Monster target = (Monster)heroes[heroes.Length];
+				target.takeDamage(player.magicDamage);
+				StartCoroutine(TurnTimer (turnTimer));
 			}
 			if(GUI.Button(new Rect(10, 80, 80, 25), "Flee")){
-				
+				Debug.Log ("Run away");
 			}
 			if(GUI.Button(new Rect(10, 115, 80, 25), "Inventory")){
-				
+				Debug.Log ("Open Inventory");
 			}
 			GUI.EndGroup();
 		}
 	}
 	
-//	void IEnumerator TurnBreak(float time) {
-//		yield return new WaitForSeconds(time);
-//	}
+	IEnumerator TurnTimer(float waitTime) {
+		yield return new WaitForSeconds(waitTime);
+		attacking = true;
+	}
 }
