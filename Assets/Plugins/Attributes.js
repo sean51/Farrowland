@@ -1,5 +1,6 @@
 ﻿#pragma strict
 public class Attributes extends MonoBehaviour{
+	var name : String;
 	var health : int;
 	var armor : int;
 	var speed : int;
@@ -24,42 +25,61 @@ public class Attributes extends MonoBehaviour{
 		return speed;
 	}
 	protected function getDamage(): int 
-	{//sadf
+	{
 		return damage;
 	}
 	protected function getMagicDamage(): int 
 	{
 		return magicDamage;
 	}
-	// set the Character to dead.
+	protected function setName(theName : int): String
+	{
+		if(theName == 1)//Warrior
+		{
+			return "Warrior";
+		}
+		else if(theName == 2)//Ranger
+		{
+			return "Ranger";
+			
+		}
+		else if(theName == 3)//Mage
+		{
+			return "Mage";
+		}else
+		{
+			return "Hero";
+		}
+	}
+	// set the Character to dead or not.
 	protected function setAlive(theIsAlive : boolean): boolean 
 	{
-		//return isAlive = theIsAlive;
-		return false;
+		isAlive = theIsAlive;
+		return isAlive;
 	}
 	protected function setHealth(theHealth : int): int 
 	{
-		//return health = theHealth;
-		return 0;
+		health = theHealth;
+		return health;
 	}
 	protected function setArmor(theArmor : int): int 
 	{
-		//return armor = theArmor;
-		return 0;
+		armor = theArmor;
+		return armor;
 	}
 	protected function setSpeed(theSpeed : int): int 
 	{
-		//return speed = theSpeed;
-		return 0;
+		speed = theSpeed;
+		return speed;
 	}
 	protected function setDamage(theDamage : int): int 
 	{
-		//return damage = theDamage;
-		return 0;
+		damage = theDamage;
+		return damage;
 	}
 	protected function setMagicDamage(theMagicDamage : int): int 
 	{
-		//return magicDamage = theMagicDamage;
-		return 0;
+		magicDamage = theMagicDamage;
+		return magicDamage;
 	}
 }
