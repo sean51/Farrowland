@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
-public class Battle : MonoBehaviour {
+public class Battle {
 	Attributes m_player;
 	Attributes[] m_enemies;
 	
@@ -25,7 +25,7 @@ public class Battle : MonoBehaviour {
 	
 	void OnGUI() {
 		GUI.BeginGroup(new Rect(25, 25, 100, 75));
-		GUI.Box (new Rect(0, 0, 100, 130));
+		GUI.Box (new Rect(0, 0, 100, 130), "");
 		if(GUI.Button (new Rect(10, 10, 80, 25), "Attack")){
 			
 		}
