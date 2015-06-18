@@ -1,37 +1,100 @@
 ﻿#pragma strict
 public class Attributes extends MonoBehaviour{
+
+	///Item Info Start
+	var equiped_item : int[] = [0,0];
+	///Item Info End
+	
+	/// Attributes Start
 	var name : String;
+	var max_health : int;
 	var health : int;
 	var armor : int;
 	var speed : int;
 	var damage : int;
 	var magicDamage : int;
-	var isAlive : boolean;
-	// lets you know if the character is alive.
-	protected function getAlive(): boolean
+	/// Attributes End
+	
+	///STATUS EFFECTS START
+	var isAlive : boolean = true;
+	var is_burned : boolean = false;
+	var is_poisoned : boolean = false;
+	var is_slow : boolean = false;
+	var is_healing : boolean= false;
+	var is_fast : boolean= false;
+	var is_cleansed: boolean= false;
+	var statis : boolean[] = [ is_burned, is_poisoned, is_slow, is_healing, is_fast, is_cleansed]; // add more statis effects HERE!!!//also need to make setmethods and getters
+	///STATUS EFFECTS END
+	
+	//Getters Start
+	function Get_Statis_Effect(): boolean
+	{
+		for(var i : int = 0; i < statis.Length; i++)
+		{	
+			if(statis[i])
+			Debug.Log(statis[i].ToString());
+		}
+		return false;
+	}
+	function Get_Is_Burned(): boolean
+	{
+		return is_burned;
+	}
+	function Get_Is_Poisoned(): boolean
+	{
+		return is_poisoned;
+	}
+	function Get_Is_Slow(): boolean
+	{
+		return is_slow;
+	}
+	function Get_Is_Healing(): boolean
+	{
+		return is_healing;
+	}
+	function Get_Is_Fast(): boolean
+	{
+		return is_fast;
+	}
+	function Get_Is_Cleansed(): boolean
+	{
+		return is_cleansed;
+	}
+	function Get_Equiped_Item(): Object
+	{
+		return equiped_item[0];
+	}
+	function Get_Max_Health(): int
+	{
+		return max_health;
+	}
+	function getAlive(): boolean
 	{
 		return isAlive;
 	}
-	protected function getHealth(): int
+	function getHealth(): int
 	{
 		return health;
 	}
-	protected function getArmor(): int 
+	function getArmor(): int 
 	{
 		return armor;
 	}
-	protected function getSpeed(): int 
+	function getSpeed(): int 
 	{
 		return speed;
 	}
-	protected function getDamage(): int 
+	function getDamage(): int 
 	{
 		return damage;
 	}
-	protected function getMagicDamage(): int 
+	function getMagicDamage(): int 
 	{
 		return magicDamage;
 	}
+	///Getters End
+	
+	///Setters Start
 	protected function setName(theName : int): String
 	{
 		if(theName == 1)//Warrior
@@ -51,35 +114,95 @@ public class Attributes extends MonoBehaviour{
 			return "Hero";
 		}
 	}
-	// set the Character to dead or not.
-	protected function setAlive(theIsAlive : boolean): boolean 
+	
+	
+	function Set_Is_Burned(the_is_burned : boolean): boolean
+	{
+		is_burned = the_is_burned;
+		return is_burned;
+	}
+	function Set_Is_Poisoned(the_is_poisoned : boolean): boolean
+	{
+		is_poisoned = the_is_poisoned;
+		return is_poisoned;
+	}
+	function Set_Is_Slow(the_is_slow : boolean): boolean
+	{
+		is_slow = the_is_slow;
+		return is_slow;
+	}
+	function Set_Is_Healing(the_is_healing : boolean): boolean
+	{
+		is_healing = the_is_healing;
+		return is_healing;
+	}
+	function Set_Is_Fast(the_is_fast : boolean): boolean
+	{
+		is_fast = the_is_fast;
+		return is_fast;
+	}
+	function Set_Is_Cleansed(the_is_cleansed : boolean): boolean
+	{
+		is_cleansed = the_is_cleansed;
+		return is_cleansed;
+	}
+	
+	/////////////////////////////////////////////////////// fix this weapon swap
+	function Set_New_Item(the_new_item : int): int[]
+	{
+		Old_Item_To_Inventory();
+		if(the_new_item == 1)
+		{
+//			equiped_item[the_new_item, 0];
+		}
+		return equiped_item;
+	}
+	function Old_Item_To_Inventory() : int
+	{
+//		var item_type : int = 0;
+//		if(!equiped_item[1].Equals(null))
+//		{
+//			item_type = equiped_item[1];
+//			equiped_item;
+//		}
+		return 0;
+	}
+	///////////////////////////////////////////////////////
+	
+	function Set_Max_Health(the_max_health : int): int 
+	{
+		max_health = the_max_health;
+		return max_health;
+	}
+	function setAlive(theIsAlive : boolean): boolean 
 	{
 		isAlive = theIsAlive;
 		return isAlive;
 	}
-	protected function setHealth(theHealth : int): int 
+	function setHealth(theHealth : int): int 
 	{
 		health = theHealth;
 		return health;
 	}
-	protected function setArmor(theArmor : int): int 
+	function setArmor(theArmor : int): int 
 	{
 		armor = theArmor;
 		return armor;
 	}
-	protected function setSpeed(theSpeed : int): int 
+	function setSpeed(theSpeed : int): int 
 	{
 		speed = theSpeed;
 		return speed;
 	}
-	protected function setDamage(theDamage : int): int 
+	function setDamage(theDamage : int): int 
 	{
 		damage = theDamage;
 		return damage;
 	}
-	protected function setMagicDamage(theMagicDamage : int): int 
+	function setMagicDamage(theMagicDamage : int): int 
 	{
 		magicDamage = theMagicDamage;
 		return magicDamage;
 	}
+	///Setters End
 }
