@@ -1,6 +1,6 @@
 ﻿#pragma strict 
 public class Hero extends Attributes 
-{
+{//asd
 	var hero_type : int = 0; // used to figure out your stats after choosing the type of character you wish to play as.
 	var name : String = "Hero";
 	

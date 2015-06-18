@@ -1,6 +1,6 @@
 ﻿#pragma strict
-public class Attributes extends MonoBehaviour{
-
+public class Attributes {
+//asd
 	///Item Info Start
 	var equiped_item : int[] = [0,0];
 	///Item Info End

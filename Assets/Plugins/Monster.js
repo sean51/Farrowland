@@ -1,6 +1,6 @@
 ﻿#pragma strict 
 public class Monster extends Attributes 
-{
+{//asd
 	var MonsterName : String = "Monster";
  	var health : int = 20;
 	var armor : int = 2;
