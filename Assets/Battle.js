@@ -18,6 +18,7 @@
 
 //single hero, one enemy battle constuctor
 function Battle(the_hero : Attributes, the_enemy : Attributes) {
+	heroes = new Attributes[the_heroes.Length];
 	heroes[0] = the_hero;
 	enemies[0] = the_enemy;
 	Battle(heroes, enemies);
@@ -25,12 +26,15 @@ function Battle(the_hero : Attributes, the_enemy : Attributes) {
 
 //single hero, multiple enemies battle constuctor
 function Battle(the_hero : Attributes, the_enemies : Attributes[]) {
+	heroes = new Attributes[the_heroes.Length];
+	enemies = new Attributes[the_enemies.Length];
 	heroes[0] = the_hero;
 	Battle(heroes, the_enemies);
 }
 
 //multiple heroes, one enemy battle constuctor
 function Battle(the_heroes : Attributes[], the_enemy : Attributes) {
+	enemies = new Attributes[the_enemies.Length];
 	enemies[0] = the_enemy;
 	Battle(the_heroes, enemies);
 }
@@ -57,7 +61,7 @@ function Set_Turns(people_fighting : Attributes[]) : Attributes[]{
 		var swapped : boolean  = false;
 		for (var j = 0; j < people_fighting.Length - 1; j++)
 			if(people_fighting[j + 1].speed > people_fighting[j].speed) {
-				var placeHolder : Attributes = people_fighting[j]; 
+				var placeHolder : Attributes = people_fighting[j];
 				people_fighting[j] = people_fighting[j + 1];
 				people_fighting[j + 1] = placeHolder;
 				swapped = true;
