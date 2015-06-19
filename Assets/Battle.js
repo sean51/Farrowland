@@ -19,13 +19,14 @@
 //single hero battle constuctor
 function Battle(the_hero : Attributes, the_enemies : Attributes[]) {
 	player = the_hero;
-	heroes[0] = the_hero;
-	people_in_play = new Attributes[the_enemies.Length + 1];
-	enemies = new Attributes[the_enemies.Length];
-	for(var i : int  = 0; i < the_enemies.Length; i++)
-		enemies[i] = the_enemies[i];
-	attacking = false;
-	attack_order = Set_Turns(people_in_play);
+	
+//	player = the_hero;
+//	heroes[0] = the_hero;
+//	people_in_play = new Attributes[the_enemies.Length + 1];
+//	enemies = new Attributes[the_enemies.Length];
+//	for(var i : int  = 0; i < the_enemies.Length; i++)
+//		enemies[i] = the_enemies[i];
+//	attack_order = Set_Turns(people_in_play);
 }
 
 
@@ -39,7 +40,6 @@ function Battle(the_heroes : Attributes[], the_enemies : Attributes[]) {
 	for(i = 0; i < the_enemies.Length; i++)
 		enemies[i] = the_enemies[i];
 	
-	attacking = false;
 	attack_order = Set_Turns(people_in_play);
 }
 
@@ -63,33 +63,32 @@ function Set_Turns(people_fighting : Attributes[]) : Attributes[]{
 			people_fighting[j+1] = people_fighting[j];
 		people_fighting[j+1].speed = key;
 	}
+	attacking = false;
 	return people_fighting;
 }
 
 
 function Update () {
 	if(!attacking) {
-		Take_Turn (attack_order[turn_counter++]);
-		attacking = true;
-	}
-
-	for(var a : Attributes in people_in_play) {
-		if(!a.isAlive) {
-			if(a.name == "Hero") 
-				Debug.Log ("Player has died.");
-			 else 
-				Debug.Log ("enemy died");
-			
+		for(var a : Attributes in people_in_play) {
+			if(!a.isAlive) {
+				Debug.Log(a.name + " has died.");		
+			}
 		}
+		if(attack_order[turn_counter].isAlive){			//current attacker is alive
+			Take_Turn (attack_order[turn_counter++]);
+			attacking = true;
+		} else 
+			turn_counter++;
 	}
 }
 
 
 function Take_Turn(attacker : Attributes) {
-	if(attacker.name == "Hero"){		//Hero
+	if(attacker.getType() == "Hero"){		//Hero
 		myTurn = true;
-	} else if(attacker.name == "Monster"){	//Monster
-		var target : Hero = heroes[0];
+	} else if(attacker.getType() == "Monster"){	//Monster
+		Set_Target(heroes[0]);
 		target.TakeDamage(attacker.damage);
 		Turn_Finished();
 	} else 	//Passive
@@ -101,20 +100,26 @@ function Turn_Finished() {
 	attacking = false;
 }
 
+function Set_Target(tar : Attributes) {
+	target = tar;
+}
+
 
 function OnGUI() {
 	if(my_turn){
 		GUI.BeginGroup(new Rect(25, 25, 100, 75));
 		GUI.Box (new Rect(0, 0, 100, 150), "");
 		if(GUI.Button (new Rect(10, 10, 80, 25), "Attack")){
-			var target = enemies[0];
+			Set_Target(enemies[0]);
 			target.TakeDamage(player.damage);
 			Turn_Finished();
+			my_turn = false;
 		}
 		if(GUI.Button (new Rect(10, 45, 80, 25), "Special")){
-			target = enemies[0];
+			Set_Target(enemies[0]);
 			target.TakeDamage(player.magicDamage);
 			Turn_Finished();
+			my_turn = false;
 		}
 		if(GUI.Button(new Rect(10, 80, 80, 25), "Flee"))
 			Debug.Log ("Run away");
