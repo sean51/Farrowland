@@ -25,6 +25,16 @@ public class Battle_GUI extends MonoBehaviour
 	private static var TEXT_START_Y: float = Screen.height/1.5;
 	private static var TEXT_START_X: float = Screen.width/6;
 	
+	private static var RESULT_HEIGHT: float = Screen.height/5;
+	private static var RESULT_WIDTH: float = Screen.width/3;
+	private static var RESULT_START_Y: float = (Screen.height / 2) - (RESULT_HEIGHT / 2);
+	private static var RESULT_START_X: float = (Screen.width / 2) - (RESULT_WIDTH / 2);
+	
+	private static var OK_HEIGHT: float = RESULT_HEIGHT / 2;
+	private static var OK_WIDTH: float = RESULT_WIDTH / 2;
+	private static var OK_START_Y: float = RESULT_HEIGHT - OK_HEIGHT;
+	private static var OK_START_X: float = (RESULT_WIDTH / 2) - (OK_WIDTH / 2);
+	
 	var target : Attributes;
 	
 	function Set_Fight(new_heroes : Hero[], new_enemies : Monster[])
@@ -32,7 +42,7 @@ public class Battle_GUI extends MonoBehaviour
 		state = battle_state.idle;
 		meta_state = turn_state.idle;
 		turn_counter = 0;
-		battle_text = new String[12];
+		battle_text = new String[13];
 		Append_Text("Battle_Begins");
 		
 		enemies = new Monster[new_enemies.length];
@@ -120,6 +130,7 @@ public class Battle_GUI extends MonoBehaviour
 		{
 			state = battle_state.hero_turn;
 			current_hero = attacker as Hero;
+			Append_Text("It is " + attacker.Get_Name() + "'s turn");
 		} 
 		else if(attacker.GetType() == Monster) //Monster
 		{
@@ -175,12 +186,12 @@ public class Battle_GUI extends MonoBehaviour
 		if(state != battle_state.lost && state != battle_state.won)
 		{
 			state = battle_state.next;
-			Debug.Log("HERE");
 		}
 	}
 	
 	function OnGUI ()
 	{
+		//SHOW THE ENEMIES
 		if(enemies != null)
 		{
 			for(var i : int = 0; i < enemies.length; i++)
@@ -200,8 +211,30 @@ public class Battle_GUI extends MonoBehaviour
 				}
 			}
 		}
+		
+		//SHOW THE BATTLE TEXT
 		GUI.Box(new Rect(TEXT_START_X, TEXT_START_Y, TEXT_WIDTH, TEXT_HEIGHT), Get_Battle_Text());
 		
+		if(state == battle_state.won)
+		{
+			GUI.BeginGroup(new Rect(RESULT_START_X, RESULT_START_Y, RESULT_WIDTH, RESULT_HEIGHT));
+			GUI.Box(new Rect(0, 0, RESULT_WIDTH, RESULT_HEIGHT), "YOU HAVE WON!");
+			if(GUI.Button (new Rect (OK_START_X, OK_START_Y, OK_WIDTH, OK_HEIGHT), "OK"))
+			{
+				state = battle_state.done;
+			}
+			GUI.EndGroup();
+		}
+		else if (state == battle_state.lost)
+		{
+			GUI.BeginGroup(new Rect(RESULT_START_X, RESULT_START_Y, RESULT_WIDTH, RESULT_HEIGHT));
+			GUI.Box(new Rect(0, 0, RESULT_WIDTH, RESULT_HEIGHT), "YOU HAVE LOST.");
+			if(GUI.Button (new Rect (OK_START_X, OK_START_Y, OK_WIDTH, OK_HEIGHT), "OK"))
+			{
+				state = battle_state.done;
+			}
+			GUI.EndGroup();
+		}
 		/*JOES SCRIPTING*/
 		var spell : boolean = false;
 		if(state == battle_state.hero_turn && !spell)

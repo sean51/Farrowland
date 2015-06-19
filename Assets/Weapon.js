@@ -1,17 +1,28 @@
-﻿public class Weapon extends Items {
+﻿public class Weapon extends Items 
+{
 	var damage : int;
 	var speed : int;
 	var defense : int;
-	function Weapon(){
+	
+	function Weapon()
+	{
 		name = "Not Found";
 		damage = 0;
 		speed = 0;
 		defense = 0;
 		price = 0;
 		tooltip = name+"\nDamage: "+damage+"\nSpeed: "+speed+"\nDefense: "+defense+"\n\nPrice: "+price;
-		
 	}
-	function Weapon(num : int){
+	
+	function Weapon(new_name : String, new_damage : int, new_speed : int)
+	{
+		name = new_name;
+		damage = new_damage;
+		speed = new_speed;
+	}
+	
+	function Weapon(num : int)
+	{
 		switch(num){
 			case 1:
 				name = "Sword";

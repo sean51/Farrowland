@@ -16,6 +16,9 @@ public class Master extends MonoBehaviour
 
 	function Start () 
 	{
+		//
+		//Debug.Log(Weapon_Generator.Generate().Get_Name());
+		//
 		dungeon = new Area[dungeon_size, dungeon_size];
 		for(var i: int = 0; i < dungeon_size; i++)
 		{
@@ -47,7 +50,7 @@ public class Master extends MonoBehaviour
 		}
 		else if(current_type == gui_type.fight)
 		{
-			if(fight.Get_State() == battle_state.won || fight.Get_State() == battle_state.lost)
+			if(fight.Get_State() == battle_state.done)
 			{
 				//fight.Reset();
 				dungeon[position[0],position[1]].Clear();

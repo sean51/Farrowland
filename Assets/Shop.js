@@ -48,10 +48,10 @@
 	GUI.Button(new Rect(Screen.width/2 + 350, Screen.height/2 - 100 , 100, 35), "Exit");
 		if(purchasing) {
 			GUI.BeginGroup(new Rect(new Rect(Screen.width/2 - 550, Screen.height/3 - 100 , 200, 155)));
-			GUI.Box(new Rect(0, 0, 200, 100), "Purchase: "+curItem.name+"\nfor "+curItem.price+" gold?");
+			GUI.Box(new Rect(0, 0, 200, 100), "Purchase: "+curItem.Get_Name()+"\nfor "+curItem.price+" gold?");
 			if(GUI.Button(new Rect(10, 55, 75, 35), "Yes")){
 				Debug.Log("Player spends: "+curItem.price+" gold.");
-				Debug.Log("Add: "+curItem.name+" to inventory.");		
+				Debug.Log("Add: "+curItem.Get_Name()+" to inventory.");		
 				purchasing = false;
 			}
 			if(GUI.Button(new Rect(115, 55, 75, 35), "No")) {
@@ -87,7 +87,7 @@
 			GUI.Box(new Rect(0, 0, 610, 410), "");
 			for(var j = 0; j < weapon_menu.Length/3; j++) {
 				for(var i = 0; i < weapon_menu.Length/3; i++) {
-					if(GUI.Button(new Rect((200 * i) + 10, (100 * Mathf.Floor(j)) + 10, 90, 90), new GUIContent(weapon_menu[j+i].name, weapon_menu[j+i].tooltip))){
+					if(GUI.Button(new Rect((200 * i) + 10, (100 * Mathf.Floor(j)) + 10, 90, 90), new GUIContent(weapon_menu[j+i].Get_Name(), weapon_menu[j+i].tooltip))){
 						curItem = weapon_menu[j];
 						purchasing = true;
 					}
@@ -121,7 +121,7 @@
 			GUI.Box(new Rect(0, 0, 610, 410), "");
 			for(j = 0; j < potion_menu.Length/3; j++) {
 				for(i = 0; i < potion_menu.Length/3; i++) {
-					if(GUI.Button(new Rect((200 * i) + 10, (100 * Mathf.Floor(j)) + 10, 90, 90), new GUIContent(potion_menu[j+i].name, potion_menu[j+i].tooltip))){
+					if(GUI.Button(new Rect((200 * i) + 10, (100 * Mathf.Floor(j)) + 10, 90, 90), new GUIContent(potion_menu[j+i].Get_Name(), potion_menu[j+i].tooltip))){
 						
 					}
 					GUI.Label(new Rect((200 * i) + 110, (100 * Mathf.Floor(j)) + 10, 100, 200), GUI.tooltip);
@@ -154,7 +154,7 @@
 			GUI.Box(new Rect(0, 0, 610, 410), "");
 			for(j = 0; j < scroll_menu.Length/3; j++) {
 				for(i = 0; i < scroll_menu.Length/3; i++) {
-					if(GUI.Button(new Rect((200 * i) + 10, (100 * Mathf.Floor(j)) + 10, 90, 90), new GUIContent(scroll_menu[j+i].name, scroll_menu[j+i].tooltip))){
+					if(GUI.Button(new Rect((200 * i) + 10, (100 * Mathf.Floor(j)) + 10, 90, 90), new GUIContent(scroll_menu[j+i].Get_Name(), scroll_menu[j+i].tooltip))){
 						
 					}
 					GUI.Label(new Rect((200 * i) + 110, (100 * Mathf.Floor(j)) + 10, 100, 40), GUI.tooltip);

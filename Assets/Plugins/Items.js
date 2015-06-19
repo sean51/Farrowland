@@ -1,8 +1,11 @@
-﻿public class Items {
+﻿public class Items 
+{
 	var price : int;
 	var tooltip : String;
-	var name : String;
+	protected var name : String;
+	
+	function Get_Name() : String
+	{
+		return name;
+	}
 }
-//function Get_Random_Item(Items item) {
-//	
-//}
