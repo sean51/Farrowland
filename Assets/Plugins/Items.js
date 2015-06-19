@@ -1,9 +1,8 @@
-﻿#pragma strict
-
-function Start () {
-
+﻿public class Items {
+	var price : int;
+	var tooltip : String;
+	var name : String;
 }
-
-function Update () {
-
-}
+//function Get_Random_Item(Items item) {
+//	
+//}
