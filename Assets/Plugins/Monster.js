@@ -1,18 +1,17 @@
 ﻿#pragma strict 
 public class Monster extends Attributes 
 {//asd
-	var MonsterName : String = "Monster";
- 	var health : int = 20;
-	var armor : int = 2;
-	var speed : int = 2;
-	var damage : int = 5;
-	var magicDamage : int = 5;
-	var isAlive : boolean = true;
 
-	function takeDamage(theDamageTaken : int) 
-	{ 
-		setHealth(getHealth() - theDamageTaken);
+	function Monster()
+	{
+		name = "Monster";
+		damage = 5;
+		health = 20;
+		armor = 2;
+		speed = 2;
+		magic_damage = 5;
 	}
+	
 	function DealDamage() : int
 	{
 		return 0;

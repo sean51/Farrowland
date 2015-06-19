@@ -11,6 +11,8 @@ public class Master extends MonoBehaviour
 	private var position: int[];
 
 	private var current_type: gui_type;
+	
+	private var player : Hero = new Hero();
 
 	function Start () 
 	{
@@ -45,9 +47,9 @@ public class Master extends MonoBehaviour
 		}
 		else if(current_type == gui_type.fight)
 		{
-			if(fight.Get_Finished())
+			if(fight.Get_State() == battle_state.won || fight.Get_State() == battle_state.lost)
 			{
-				fight.Reset();
+				//fight.Reset();
 				dungeon[position[0],position[1]].Clear();
 				Set_GUI(gui_type.nav);
 			}
@@ -98,8 +100,10 @@ public class Master extends MonoBehaviour
 				navigation.enabled = true;
 				break;
 			case gui_type.fight:
-				fight.Set_Fight(dungeon[position[0], position[1]].Get_Monsters());
-				//var joe : Battle;
+				fight.Set_Fight([player], dungeon[position[0], position[1]].Get_Monsters());
+				
+				//battle = new Battle(player, dungeon[position[0], position[1]].Get_Monsters());
+				
 				fight.enabled = true;
 				break;
 		}	

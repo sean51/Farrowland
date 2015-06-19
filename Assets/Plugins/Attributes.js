@@ -12,11 +12,11 @@ public class Attributes {
 	var armor : int;
 	var speed : int;
 	var damage : int;
-	var magicDamage : int;
+	var magic_damage : int;
 	/// Attributes End
 	
 	///STATUS EFFECTS START
-	var isAlive : boolean = true;
+	protected var is_alive : boolean;
 	var is_burned : boolean = false;
 	var is_poisoned : boolean = false;
 	var is_slow : boolean = false;
@@ -25,6 +25,37 @@ public class Attributes {
 	var is_cleansed: boolean= false;
 	var statis : boolean[] = [ is_burned, is_poisoned, is_slow, is_healing, is_fast, is_cleansed]; // add more statis effects HERE!!!//also need to make setmethods and getters
 	///STATUS EFFECTS END
+	
+	/*MODIFICATIONS*/
+	function Attributes()
+	{
+		is_alive = true;
+	}
+	
+	function Get_Name()
+	{
+		return name;
+	}
+	
+	function Take_Damage (theDamageTaken : int)
+	{ 
+		health -= theDamageTaken;
+		if(health <= 0)
+		{
+			is_alive = false;
+		}
+	}
+	
+	function Get_Alive(): boolean
+	{
+		return is_alive;
+	}
+	
+	function Get_Damage(): int 
+	{
+		return damage;
+	}
+	/*MODIFICATIONS*/
 	
 	//Getters Start
 	function Get_Statis_Effect(): boolean
@@ -68,10 +99,6 @@ public class Attributes {
 	{
 		return max_health;
 	}
-	function getAlive(): boolean
-	{
-		return isAlive;
-	}
 	function getHealth(): int
 	{
 		return health;
@@ -84,13 +111,9 @@ public class Attributes {
 	{
 		return speed;
 	}
-	function getDamage(): int 
-	{
-		return damage;
-	}
 	function getMagicDamage(): int 
 	{
-		return magicDamage;
+		return magic_damage;
 	}
 	///Getters End
 	
@@ -176,8 +199,8 @@ public class Attributes {
 	}
 	function setAlive(theIsAlive : boolean): boolean 
 	{
-		isAlive = theIsAlive;
-		return isAlive;
+		is_alive = theIsAlive;
+		return is_alive;
 	}
 	function setHealth(theHealth : int): int 
 	{
@@ -201,8 +224,8 @@ public class Attributes {
 	}
 	function setMagicDamage(theMagicDamage : int): int 
 	{
-		magicDamage = theMagicDamage;
-		return magicDamage;
+		magic_damage = theMagicDamage;
+		return magic_damage;
 	}
 	///Setters End
 }

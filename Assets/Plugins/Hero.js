@@ -2,19 +2,18 @@
 public class Hero extends Attributes 
 {//asd
 	var hero_type : int = 0; // used to figure out your stats after choosing the type of character you wish to play as.
-	var name : String = "Hero";
+
+	function Hero()
+	{
+		name = "Hero";
+		damage = 20;
+		health = 60;
+		max_health = 60;
+		armor = 5;
+		speed = 2;
+		magic_damage = 5;
+	}
 	
-	////////////////////// Attributes Start
-	var max_health = 60;
-	var health : int = 60;
-	var armor : int = 5;
-	var speed : int = 2;
-	var damage : int = 5;
-	var magic_damage : int = 5;
-	////////////////////// Attributes End
-
-	var isAlive : boolean = true;
-
 	function setType(theType : int)
 	{
 		if(hero_type == 1)//Warrior
@@ -51,9 +50,7 @@ public class Hero extends Attributes
 			setAlive(true);
 		} 
 	}
-	function TakeDamage(theDamageTaken : int) { 
-		setHealth( getHealth() - theDamageTaken);
-	}
+
 	function DealDamage() 
 	{ 
 		return 0;
