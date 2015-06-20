@@ -56,7 +56,7 @@ public class Attributes {
 		//return damage;
 		if(equipped[0] != null)
 		{
-			return (equipped[0] as Weapon).Get_Damage();
+			return (equipped[0] as Weapon).Get_Damage() + damage;
 		}
 		else
 		{

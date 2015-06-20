@@ -17,6 +17,12 @@ public class Hero extends Attributes
 		magic_damage = 5;
 	}
 	
+	function Stat_Text() : String
+	{
+		var spacing : String = "     ";
+		return "Name: " + name + spacing + "Health: " + health + "/" + max_health + spacing + "Damage: " + Get_Damage() + spacing + "Magic: " + magic_damage + spacing + "Armor: " + armor + spacing + "Speed: " + speed;
+	}
+	
 	function Get_Backpack() : Items[]
 	{
 		return backpack;

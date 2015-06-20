@@ -16,6 +16,7 @@ public class Master extends MonoBehaviour
 	private var fight : Battle_GUI;
 	private var inventory : Inventory_GUI;
 	private var text : Text_GUI;
+	private var player_text : Player_GUI;
 
 	private var dungeon: Area[,];
 	private var dungeon_size : int = 10;
@@ -44,7 +45,8 @@ public class Master extends MonoBehaviour
 		fight.enabled = false;
 		inventory = gameObject.AddComponent.<Inventory_GUI>();
 		inventory.Populate(player.Get_Backpack(), player.Get_Equipped());
-		text = gameObject.AddComponent.<Text_GUI>();
+		player_text = gameObject.AddComponent.<Player_GUI>();
+		player_text.Set(player);
 		//
 		player.Add_Item(Weapon_Generator.Generate());
 		//
