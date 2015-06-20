@@ -14,7 +14,7 @@ public class Battle_GUI extends MonoBehaviour
 	private static var TURN_TIMER : float = .5f;
 	
 	private static var MONSTER_HEIGHT: float = Screen.height/20;
-	private static var MONSTER_WIDTH: float = Screen.width/20;
+	private static var MONSTER_WIDTH: float = Screen.width/7;
 	private static var MONSTER_START_Y: float = Screen.height/20;
 	private static var MONSTER_START_X: float = Screen.width/6;
 	
@@ -171,19 +171,73 @@ public class Battle_GUI extends MonoBehaviour
 	{
 		//SHOW THE ENEMIES
 		if(enemies != null)
-		{
-			for(var i : int = 0; i < enemies.length; i++)
-			{
-				if(enemies[i].Get_Alive())
-				{
-					if(GUI.Button (new Rect (MONSTER_START_X * i, MONSTER_START_Y, MONSTER_WIDTH, MONSTER_HEIGHT), enemies[i].Get_Name()))
+		{	
+			if(enemies.length < 2) {
+				if(meta_state == turn_state.targeting){
+					if(GUI.Button (new Rect (MONSTER_START_X , MONSTER_START_Y, MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[0].Get_Name(), enemies[0].Get_Tooltip())))
 					{
 						if(meta_state == turn_state.targeting)
 						{
 							state = battle_state.idle;
 							meta_state = turn_state.idle;
-							Deal_Damage(current_hero, enemies[i]);
+							Deal_Damage(current_hero, enemies[0]);
 							Turn_Finished();
+						}
+					}
+				} else {
+					GUI.Box (new Rect (MONSTER_START_X, MONSTER_START_Y, MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[0].Get_Name(), enemies[0].Get_Tooltip()));
+				}
+				var centeredStyle = GUI.skin.GetStyle("Label");
+				centeredStyle.alignment = TextAnchor.UpperCenter;
+				GUI.Label(new Rect (MONSTER_START_X, MONSTER_START_Y + MONSTER_HEIGHT + 10, MONSTER_WIDTH, MONSTER_HEIGHT * 5), GUI.tooltip, centeredStyle);
+				GUI.tooltip = null;
+			}
+			else
+			{
+				for(var i : int = 0; i < enemies.length; i++)
+				{
+					if(enemies[i].Get_Alive())
+					{
+						if(i >= Mathf.Ceil(enemies.length/2)){
+							var j = 3.25f;
+						} else {
+							j = 0;
+						}
+						if(enemies.length % 2 == 0) {
+							if(meta_state == turn_state.targeting)
+							{
+								if(GUI.Button (new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2)), MONSTER_START_Y + (MONSTER_START_Y * j), MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[i].Get_Name(), enemies[i].Get_Tooltip())))
+								{
+									state = battle_state.idle;
+									meta_state = turn_state.idle;
+									Deal_Damage(current_hero, enemies[i]);
+									Turn_Finished();
+								}
+							} else {
+								GUI.Box (new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2)), MONSTER_START_Y + (MONSTER_START_Y * j), MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[i].Get_Name(), enemies[i].Get_Tooltip()));
+							}
+							centeredStyle = GUI.skin.GetStyle("Label");
+							centeredStyle.alignment = TextAnchor.UpperCenter;
+							GUI.Label(new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2)), MONSTER_START_Y  + (MONSTER_START_Y * j) + MONSTER_HEIGHT, MONSTER_WIDTH, MONSTER_HEIGHT * 5), GUI.tooltip, centeredStyle);
+							GUI.tooltip = null;
+						} else {
+							if(meta_state == turn_state.targeting)
+							{
+								if(GUI.Button (new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2 + 1)), MONSTER_START_Y + (MONSTER_START_Y * j), MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[i].Get_Name(), enemies[i].Get_Tooltip())))
+								{
+									state = battle_state.idle;
+									meta_state = turn_state.idle;
+									Deal_Damage(current_hero, enemies[i]);
+									Turn_Finished();
+								}
+							}
+							 else {
+								GUI.Box (new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2 + 1)), MONSTER_START_Y + (MONSTER_START_Y * j), MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[i].Get_Name(), enemies[i].Get_Tooltip()));
+							}
+							centeredStyle = GUI.skin.GetStyle("Label");
+							centeredStyle.alignment = TextAnchor.UpperCenter;
+							GUI.Label(new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2 + 1)), MONSTER_START_Y  + (MONSTER_START_Y * j) +  MONSTER_HEIGHT, MONSTER_WIDTH, MONSTER_HEIGHT * 5), GUI.tooltip, centeredStyle);
+							GUI.tooltip = null;
 						}
 					}
 				}
@@ -212,38 +266,64 @@ public class Battle_GUI extends MonoBehaviour
 		}
 		/*JOES SCRIPTING*/
 		var spell : boolean = false;
+		var escape_attempt : boolean = false;
 		if(state == battle_state.hero_turn && !spell)
 		{
 			GUI.BeginGroup(new Rect(OPTIONS_START_X, OPTIONS_START_Y, OPTIONS_WIDTH, OPTIONS_HEIGHT));
 			GUI.Box (new Rect(0, 0, OPTIONS_WIDTH, OPTIONS_HEIGHT), "");
-			if(GUI.Button (new Rect(10, 10, 80, 25), "Attack"))
+			if(meta_state == turn_state.targeting) 
 			{
-				meta_state = turn_state.targeting;
+				(GUI.Box (new Rect(10, 10, 80, 25), "Attack"));
+			}
+			else
+			{
+				if(GUI.Button (new Rect(10, 10, 80, 25), "Attack"))
+				{
+				
+					meta_state = turn_state.targeting;
+				}
 			}
 			if(GUI.Button (new Rect(10, 45, 80, 25), "Spell"))
 			{
+				Debug.Log("hit");
 				spell = true;
 			}
 			if(GUI.Button(new Rect(10, 80, 80, 25), "Flee"))
 			{
+				escape_attempt = true;	
 				var decision : float = Random.Range(0, 3);
-					if(decision > 1.5f) 
-					{
-						Debug.Log("You ran away");
-					}
-					else 
-					{
-						Debug.Log("You failed to run away");
-					}
 			}
 			if(GUI.Button(new Rect(10, 115, 80, 25), "Inventory"))
 				Debug.Log ("Open Inventory");
 			GUI.EndGroup();
 		}
+		
+		if(escape_attempt){
+			if(decision > 1.5f) 
+			{
+				GUI.BeginGroup(new Rect(RESULT_START_X, RESULT_START_Y, RESULT_WIDTH, RESULT_HEIGHT));
+				GUI.Box(new Rect(0, 0, RESULT_WIDTH, RESULT_HEIGHT), "You ran away.");
+				if(GUI.Button (new Rect (OK_START_X, OK_START_Y, OK_WIDTH, OK_HEIGHT), "OK"))
+				{
+					state = battle_state.done;
+					escape_attempt = false;
+				}
+				GUI.EndGroup();
+			}
+			else 
+			{
+				GUI.BeginGroup(new Rect(RESULT_START_X, RESULT_START_Y, RESULT_WIDTH, RESULT_HEIGHT));
+				GUI.Box(new Rect(0, 0, RESULT_WIDTH, RESULT_HEIGHT), "You failed to run away.");
+				if(GUI.Button (new Rect (OK_START_X, OK_START_Y, OK_WIDTH, OK_HEIGHT), "OK"))
+				{
+					escape_attempt = false;
+				}
+				GUI.EndGroup();
+			}
+		}
 	
 		if(spell) 
 		{
-			var scrollPosition : Vector2;
 	    	GUI.BeginGroup(new Rect(25, 25, 150, 200));
 		  	GUI.Box (new Rect(0, 0, 100, 150), "");
 			if(GUILayout.Button ("Basic Spell"))
@@ -325,8 +405,7 @@ public class Battle_GUI extends MonoBehaviour
 			
 			if(GUILayout.Button("Back")) {
 				spell = false;
-			}
-		    GUILayout.EndScrollView();	        
+			}	        
 			GUI.EndGroup();
 		}
 		/*JOES SCRIPTING*/

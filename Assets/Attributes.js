@@ -26,6 +26,17 @@ public class Attributes {
 	var statis : boolean[] = [ is_burned, is_poisoned, is_slow, is_healing, is_fast, is_cleansed]; // add more statis effects HERE!!!//also need to make setmethods and getters
 	///STATUS EFFECTS END
 	
+	
+	/*MODIFICATIONS*/
+	function Get_Tooltip() : String {
+		return "Health: "+health+
+				"\nDamage: "+damage+
+				"\nArmor: "+armor+
+				"\nSpeed: "+speed+
+				"\nMagic: "+magic_damage;
+	}
+	
+	
 	/*MODIFICATIONS*/
 	function Attributes()
 	{

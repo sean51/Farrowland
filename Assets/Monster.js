@@ -13,6 +13,19 @@ public class Monster extends Attributes
 		magic_damage = 5;
 	}
 	
+	function Monster(monster_name : String, monster_damage : int,
+	 					monster_health : int, monster_armor : int, 
+	 					monster_speed : int, monster_magic_damage : int){
+	 					
+		equipped = new Items[6];
+		name = monster_name;
+		damage = monster_damage;
+		health = monster_health;
+		armor = monster_armor;
+		speed = monster_speed;
+		magic_damage = monster_magic_damage;
+	}
+	
 	function DealDamage() : int
 	{
 		return 0;

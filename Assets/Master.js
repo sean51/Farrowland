@@ -62,7 +62,7 @@ public class Master extends MonoBehaviour
 	 */
 	function Update () 
 	{
-		if(current_type == gui_type.nav)
+		if(current_type == gui_type.nav || current_type == gui_type.quest || current_type == gui_type.town)
 		{
 			if(navigation.Get_Choice() != direction.undecided)
 			{
@@ -123,6 +123,12 @@ public class Master extends MonoBehaviour
 		switch(new_type)
 		{
 			case gui_type.nav:
+				navigation.enabled = true;
+				break;
+			case gui_type.quest:
+				navigation.enabled = true;
+				break;
+			case gui_type.town:
 				navigation.enabled = true;
 				break;
 			case gui_type.fight:
