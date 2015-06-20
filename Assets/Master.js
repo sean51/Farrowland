@@ -17,9 +17,10 @@ public class Master extends MonoBehaviour
 	private var inventory : Inventory_GUI;
 	private var text : Text_GUI;
 	private var player_text : Player_GUI;
+	private var travel : Travel_GUI;
 
-	private var dungeon: Area[,];
-	private var dungeon_size : int = 10;
+	private var current_zone: Area[,];
+	private var zone_size : int = 10;
 	private var position: int[];
 
 	private var current_type: gui_type;
@@ -28,41 +29,35 @@ public class Master extends MonoBehaviour
 
 	function Start () 
 	{
-		dungeon = new Area[dungeon_size, dungeon_size];
-		for(var i: int = 0; i < dungeon_size; i++)
-		{
-			for(var j: int = 0; j < dungeon_size; j++)
-			{
-				dungeon[i,j] = new Area();
-			}
-		}
-		position = [0,0];
+		//Create_Zone(zone.dungeon, 10);
+		Create_Zone(zone.town, 3);
+		Start_GUI();
+		//Give the player a random weapon
+		player.Add_Item(Weapon_Generator.Generate());
+		New_Area();
+		
+	}
+	
+	function Start_GUI()
+	{
 		text = gameObject.AddComponent.<Text_GUI>();
 		Messenger.Set(text);
 		option = gameObject.AddComponent.<Option_GUI>();
-		option.enabled = false;
 		fight = gameObject.AddComponent.<Battle_GUI>();
-		fight.enabled = false;
+		travel = gameObject.AddComponent.<Travel_GUI>();
 		inventory = gameObject.AddComponent.<Inventory_GUI>();
 		inventory.Populate(player.Get_Backpack(), player.Get_Equipped());
 		player_text = gameObject.AddComponent.<Player_GUI>();
 		player_text.Set(player);
-		//
-		player.Add_Item(Weapon_Generator.Generate());
-		//
 		navigation = gameObject.AddComponent.<Navigation_GUI>();
-		navigation.Set_Options([position[0] < dungeon_size - 1, position[0] > 0, position[1] > 0, position[1] < dungeon_size - 1]);
-		current_type = gui_type.nav;
-		
-		Texture_Change(dungeon[position[0], position[1]].Get_Color());
-		Color_Surrounding();
 	}
+	
 	/*
 	 * Listen for status changes in the GUIs.
 	 */
 	function Update () 
 	{
-		if(current_type == gui_type.nav || current_type == gui_type.quest || current_type == gui_type.town)
+		if(navigation.enabled == true)
 		{
 			if(navigation.Get_Choice() != direction.undecided)
 			{
@@ -73,8 +68,18 @@ public class Master extends MonoBehaviour
 		{
 			if(fight.Get_State() == battle_state.done)
 			{
-				dungeon[position[0],position[1]].Clear();
+				current_zone[position[0],position[1]].Clear();
 				Set_GUI(gui_type.nav);
+			}
+		}
+		if(current_type == gui_type.travel)
+		{
+			if(travel.Get_Enter())
+			{
+				current_type = gui_type.idle;
+				travel.Reset();
+				Create_Zone(current_zone[position[0],position[1]].Get_Location(), current_zone[position[0],position[1]].Get_Location_Size());
+				New_Area();
 			}
 		}
 	}
@@ -100,16 +105,70 @@ public class Master extends MonoBehaviour
 		New_Area();
 	}
 
+	function Create_Zone(zone_type : zone, new_zone_size : int)
+	{
+		zone_size = new_zone_size;
+		current_zone = new Area[zone_size, zone_size];
+		switch(zone_type)
+		{
+			case zone.dungeon:
+				switch (Random.Range(0,3))
+				{
+					case 0: position = [zone_size - 1, zone_size - 1];
+						break;
+					case 1: position = [zone_size - 1, 0];
+						break;
+					case 2: position = [0, zone_size - 1];
+						break;
+					case 3: position = [0,0];
+						break;
+				}
+				for(var i: int = 0; i < zone_size; i++)
+				{
+					for(var j: int = 0; j < zone_size; j++)
+					{
+						if (i == position[0] && j == position[1])
+						{
+							current_zone[i,j] = new Area(gui_type.travel, "Portal.", zone.town, 3);
+						}
+						else
+						{
+							current_zone[i,j] = new Area(1);
+						}
+					}
+				}
+				break;
+			case zone.town:
+				position = [zone_size / 2, zone_size / 2];
+				for(var k: int = 0; k < zone_size; k++)
+				{
+					for(var l: int = 0; l < zone_size; l++)
+					{
+						if (k == position[0] && l == position[1])
+						{
+							current_zone[k,l] = new Area(gui_type.nav, "You are standing in the center of town.");
+						}
+						else if (k == position[0] + 1 && l == position[1])
+						{
+							current_zone[k,l] = new Area(gui_type.travel, "Portal.", zone.dungeon, 5);
+						}
+						else
+						{
+							current_zone[k,l] = new Area(1);
+						}
+					}
+				}
+				break;
+		}
+	}
+	
 	function New_Area()
 	{
-		dungeon[position[0], position[1]].Begin();
-		Texture_Change(dungeon[position[0], position[1]].Get_Color());
-		navigation.Set_Options([position[0] < dungeon_size - 1, position[0] > 0, position[1] > 0, position[1] < dungeon_size - 1]);
+		Recolor();
+		current_zone[position[0], position[1]].Begin();
+		navigation.Set_Options([position[0] < zone_size - 1, position[0] > 0, position[1] > 0, position[1] < zone_size - 1]);
 		navigation.Reset();
-		
-		Set_GUI(dungeon[position[0], position[1]].Get_Type());
-		
-		Color_Surrounding();
+		Set_GUI(current_zone[position[0], position[1]].Get_Type());
 	}
 
 	function Set_GUI(new_type : gui_type)
@@ -119,32 +178,39 @@ public class Master extends MonoBehaviour
 		option.enabled = false;
 		fight.enabled = false;
 		navigation.enabled = false;
+		travel.enabled = false;
 		
 		switch(new_type)
 		{
 			case gui_type.nav:
-				navigation.enabled = true;
-				break;
 			case gui_type.quest:
-				navigation.enabled = true;
-				break;
 			case gui_type.town:
 				navigation.enabled = true;
 				break;
+			case gui_type.travel:
+				travel.enabled = true;
+				navigation.enabled = true;
+				break;
 			case gui_type.fight:
-				fight.Set_Fight([player], dungeon[position[0], position[1]].Get_Monsters());
+				fight.Set_Fight([player], current_zone[position[0], position[1]].Get_Monsters());
 				fight.enabled = true;
 				break;
 		}	
 	}
 	
-	function Color_Surrounding()
+	private function Recolor()
+	{
+		Texture_Change(current_zone[position[0], position[1]].Get_Color());
+		Color_Surrounding();
+	}
+	
+	private function Color_Surrounding()
 	{
 		//UP, DOWN, LEFT, RIGHT
-		var boundaries : boolean[] = [position[0] + 1 < dungeon_size, position[0] != 0, position[1] != 0, position[1] + 1 < dungeon_size];
+		var boundaries : boolean[] = [position[0] + 1 < zone_size, position[0] != 0, position[1] != 0, position[1] + 1 < zone_size];
 		if(boundaries[0])
 		{
-			Texture_Change(dungeon[position[0] + 1, position[1]].Get_Color(), up);
+			Texture_Change(current_zone[position[0] + 1, position[1]].Get_Color(), up);
 		}
 		else
 		{
@@ -152,7 +218,7 @@ public class Master extends MonoBehaviour
 		}
 		if(boundaries[0] && boundaries[2])
 		{
-			Texture_Change(dungeon[position[0] + 1, position[1] - 1].Get_Color(), ul);
+			Texture_Change(current_zone[position[0] + 1, position[1] - 1].Get_Color(), ul);
 		}
 		else
 		{
@@ -160,7 +226,7 @@ public class Master extends MonoBehaviour
 		}
 		if(boundaries[0] && boundaries[3])
 		{
-			Texture_Change(dungeon[position[0] + 1, position[1] + 1].Get_Color(), ur);
+			Texture_Change(current_zone[position[0] + 1, position[1] + 1].Get_Color(), ur);
 		}
 		else
 		{
@@ -168,7 +234,7 @@ public class Master extends MonoBehaviour
 		}
 		if(boundaries[1])
 		{
-			Texture_Change(dungeon[position[0] - 1, position[1]].Get_Color(), down);
+			Texture_Change(current_zone[position[0] - 1, position[1]].Get_Color(), down);
 		}
 		else
 		{
@@ -176,7 +242,7 @@ public class Master extends MonoBehaviour
 		}
 		if(boundaries[1] && boundaries[2])
 		{
-			Texture_Change(dungeon[position[0] - 1, position[1] - 1].Get_Color(), dl);
+			Texture_Change(current_zone[position[0] - 1, position[1] - 1].Get_Color(), dl);
 		}
 		else
 		{
@@ -184,7 +250,7 @@ public class Master extends MonoBehaviour
 		}
 		if(boundaries[1] && boundaries[3])
 		{
-			Texture_Change(dungeon[position[0] - 1, position[1] + 1].Get_Color(), dr);
+			Texture_Change(current_zone[position[0] - 1, position[1] + 1].Get_Color(), dr);
 		}
 		else
 		{
@@ -192,7 +258,7 @@ public class Master extends MonoBehaviour
 		}
 		if(boundaries[2])
 		{
-			Texture_Change(dungeon[position[0], position[1] - 1].Get_Color(), left);
+			Texture_Change(current_zone[position[0], position[1] - 1].Get_Color(), left);
 		}
 		else
 		{
@@ -200,7 +266,7 @@ public class Master extends MonoBehaviour
 		}
 		if(boundaries[3])
 		{
-			Texture_Change(dungeon[position[0], position[1] + 1].Get_Color(), right);
+			Texture_Change(current_zone[position[0], position[1] + 1].Get_Color(), right);
 		}
 		else
 		{

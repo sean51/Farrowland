@@ -28,7 +28,8 @@ public class Attributes {
 	
 	
 	/*MODIFICATIONS*/
-	function Get_Tooltip() : String {
+	function Get_Tooltip() : String 
+	{
 		return "Health: "+health+
 				"\nDamage: "+damage+
 				"\nArmor: "+armor+
