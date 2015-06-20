@@ -5,8 +5,6 @@ public class Battle_GUI extends MonoBehaviour
 	private var state : battle_state;
 	private var meta_state : turn_state;
 	
-	private var battle_text : String[];
-	
 	private var enemies : Monster[];
 	private var heroes : Hero[];
 	private var attack_order : Attributes[];
@@ -19,11 +17,6 @@ public class Battle_GUI extends MonoBehaviour
 	private static var MONSTER_WIDTH: float = Screen.width/20;
 	private static var MONSTER_START_Y: float = Screen.height/20;
 	private static var MONSTER_START_X: float = Screen.width/6;
-	
-	private static var TEXT_HEIGHT: float = Screen.height/3.5;
-	private static var TEXT_WIDTH: float = Screen.width/1.5;
-	private static var TEXT_START_Y: float = Screen.height/1.5;
-	private static var TEXT_START_X: float = Screen.width/6;
 	
 	private static var OPTIONS_HEIGHT: float = Screen.height/3.5;
 	private static var OPTIONS_WIDTH: float = Screen.width/10;
@@ -47,8 +40,7 @@ public class Battle_GUI extends MonoBehaviour
 		state = battle_state.idle;
 		meta_state = turn_state.idle;
 		turn_counter = 0;
-		battle_text = new String[13];
-		Append_Text("Battle_Begins");
+		Messenger.Text("Battle_Begins");
 		
 		enemies = new Monster[new_enemies.length];
 		heroes = new Hero[new_heroes.length];
@@ -105,25 +97,6 @@ public class Battle_GUI extends MonoBehaviour
 		}
 	}
 	
-	function Append_Text(new_line : String)
-	{
-		for(var i : int = battle_text.length - 1; i >= 1; i--)
-		{
-			battle_text[i] = battle_text[i - 1];
-		}
-		battle_text[0] = new_line;
-	}
-	
-	function Get_Battle_Text() : String
-	{
-		var string_builder : String = "";
-		for(var i : int = 0; i < battle_text.length; i++)
-		{
-			string_builder += battle_text[i] + "\n";
-		}
-		return string_builder;
-	}
-	
 	function Get_State(): battle_state
 	{
 		return state;
@@ -135,7 +108,7 @@ public class Battle_GUI extends MonoBehaviour
 		{
 			state = battle_state.hero_turn;
 			current_hero = attacker as Hero;
-			Append_Text("It is " + attacker.Get_Name() + "'s turn");
+			Messenger.Text("It is " + attacker.Get_Name() + "'s turn");
 		} 
 		else if(attacker.GetType() == Monster) //Monster
 		{
@@ -148,10 +121,10 @@ public class Battle_GUI extends MonoBehaviour
 	function Deal_Damage(attacker : Attributes, defender : Attributes)
 	{
 		defender.Take_Damage(attacker.Get_Damage());
-		Append_Text(attacker.Get_Name() + " deals " + attacker.Get_Damage() + " damage to " + defender.Get_Name());
+		Messenger.Text(attacker.Get_Name() + " deals " + attacker.Get_Damage() + " damage to " + defender.Get_Name());
 		if(!defender.Get_Alive())
 		{
-			Append_Text(defender.Get_Name() + " has died");
+			Messenger.Text(defender.Get_Name() + " has died");
 		}
 	}
 
@@ -168,7 +141,7 @@ public class Battle_GUI extends MonoBehaviour
 		}
 		if(all_dead) 
 		{
-			Append_Text("You have lost");
+			Messenger.Text("You have lost");
 			state = battle_state.lost;
 		}
 		all_dead = true;
@@ -182,7 +155,7 @@ public class Battle_GUI extends MonoBehaviour
 		}
 		if(all_dead) 
 		{
-			Append_Text("You have won");
+			Messenger.Text("You have won");
 			state = battle_state.won;
 		}
 		
@@ -215,12 +188,6 @@ public class Battle_GUI extends MonoBehaviour
 					}
 				}
 			}
-		}
-		
-		//SHOW THE BATTLE TEXT
-		if(!Inventory_GUI.show)
-		{
-			GUI.Box(new Rect(TEXT_START_X, TEXT_START_Y, TEXT_WIDTH, TEXT_HEIGHT), Get_Battle_Text());
 		}
 		
 		if(state == battle_state.won)

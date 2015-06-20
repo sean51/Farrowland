@@ -28,14 +28,15 @@ public class Area
 		} else {
 			my_type = gui_type.fight;
 		}
-		switch(my_type) {
+		switch(my_type) 
+		{
 			case gui_type.fight:
 				if(!enemy_amount) enemy_amount = 4;
 				current_enemies = new Monster[enemy_amount];
 				for(var i = 0; i < current_enemies.length; i++) {
 					current_enemies[i] = new Monster();
 				}
-				dialouge = "You have come across "+current_enemies.length+" monsters.";
+				dialouge = "You have come across " + current_enemies.length + " monsters.";
 				break;
 			case gui_type.nav:
 				dialouge = "Choose where you want to go.";
@@ -54,8 +55,9 @@ public class Area
 		Area();
 	}
 	
-	function Get_Dialouge() : String {
-		return dialouge;
+	function Begin()
+	{
+		Messenger.Text(dialouge);
 	}
 	
 	function Get_Color(): Color

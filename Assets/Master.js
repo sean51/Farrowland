@@ -15,6 +15,7 @@ public class Master extends MonoBehaviour
 	private var navigation: Navigation_GUI;
 	private var fight : Battle_GUI;
 	private var inventory : Inventory_GUI;
+	private var text : Text_GUI;
 
 	private var dungeon: Area[,];
 	private var dungeon_size : int = 10;
@@ -35,12 +36,15 @@ public class Master extends MonoBehaviour
 			}
 		}
 		position = [0,0];
+		text = gameObject.AddComponent.<Text_GUI>();
+		Messenger.Set(text);
 		option = gameObject.AddComponent.<Option_GUI>();
 		option.enabled = false;
 		fight = gameObject.AddComponent.<Battle_GUI>();
 		fight.enabled = false;
 		inventory = gameObject.AddComponent.<Inventory_GUI>();
 		inventory.Populate(player.Get_Backpack(), player.Get_Equipped());
+		text = gameObject.AddComponent.<Text_GUI>();
 		//
 		player.Add_Item(Weapon_Generator.Generate());
 		//
@@ -96,6 +100,7 @@ public class Master extends MonoBehaviour
 
 	function New_Area()
 	{
+		dungeon[position[0], position[1]].Begin();
 		Texture_Change(dungeon[position[0], position[1]].Get_Color());
 		navigation.Set_Options([position[0] < dungeon_size - 1, position[0] > 0, position[1] > 0, position[1] < dungeon_size - 1]);
 		navigation.Reset();
