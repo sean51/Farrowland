@@ -2,6 +2,15 @@
 
 public class Master extends MonoBehaviour
 {
+	public var up : GameObject;
+	public var down : GameObject;
+	public var left : GameObject;
+	public var right : GameObject;
+	public var ur : GameObject;
+	public var ul : GameObject;
+	public var dr : GameObject;
+	public var dl : GameObject;
+	
 	private var option: Option_GUI;
 	private var navigation: Navigation_GUI;
 	private var fight : Battle_GUI;
@@ -38,6 +47,9 @@ public class Master extends MonoBehaviour
 		navigation = gameObject.AddComponent.<Navigation_GUI>();
 		navigation.Set_Options([position[0] < dungeon_size - 1, position[0] > 0, position[1] > 0, position[1] < dungeon_size - 1]);
 		current_type = gui_type.nav;
+		
+		Texture_Change(dungeon[position[0], position[1]].Get_Color());
+		Color_Surrounding();
 	}
 	/*
 	 * Listen for status changes in the GUIs.
@@ -89,6 +101,8 @@ public class Master extends MonoBehaviour
 		navigation.Reset();
 		
 		Set_GUI(dungeon[position[0], position[1]].Get_Type());
+		
+		Color_Surrounding();
 	}
 
 	function Set_GUI(new_type : gui_type)
@@ -110,6 +124,76 @@ public class Master extends MonoBehaviour
 				break;
 		}	
 	}
+	
+	function Color_Surrounding()
+	{
+		//UP, DOWN, LEFT, RIGHT
+		var boundaries : boolean[] = [position[0] + 1 < dungeon_size, position[0] != 0, position[1] != 0, position[1] + 1 < dungeon_size];
+		if(boundaries[0])
+		{
+			Texture_Change(dungeon[position[0] + 1, position[1]].Get_Color(), up);
+		}
+		else
+		{
+			Texture_Change(Color.black, up);
+		}
+		if(boundaries[0] && boundaries[2])
+		{
+			Texture_Change(dungeon[position[0] + 1, position[1] - 1].Get_Color(), ul);
+		}
+		else
+		{
+			Texture_Change(Color.black, ul);
+		}
+		if(boundaries[0] && boundaries[3])
+		{
+			Texture_Change(dungeon[position[0] + 1, position[1] + 1].Get_Color(), ur);
+		}
+		else
+		{
+			Texture_Change(Color.black, ur);
+		}
+		if(boundaries[1])
+		{
+			Texture_Change(dungeon[position[0] - 1, position[1]].Get_Color(), down);
+		}
+		else
+		{
+			Texture_Change(Color.black, down);
+		}
+		if(boundaries[1] && boundaries[2])
+		{
+			Texture_Change(dungeon[position[0] - 1, position[1] - 1].Get_Color(), dl);
+		}
+		else
+		{
+			Texture_Change(Color.black, dl);
+		}
+		if(boundaries[1] && boundaries[3])
+		{
+			Texture_Change(dungeon[position[0] - 1, position[1] + 1].Get_Color(), dr);
+		}
+		else
+		{
+			Texture_Change(Color.black, dr);
+		}
+		if(boundaries[2])
+		{
+			Texture_Change(dungeon[position[0], position[1] - 1].Get_Color(), left);
+		}
+		else
+		{
+			Texture_Change(Color.black, left);
+		}
+		if(boundaries[3])
+		{
+			Texture_Change(dungeon[position[0], position[1] + 1].Get_Color(), right);
+		}
+		else
+		{
+			Texture_Change(Color.black, right);
+		}
+	}
 
 	function Texture_Change(temp_color: Color)
 	{
@@ -117,5 +201,13 @@ public class Master extends MonoBehaviour
 		texture.SetPixel(0, 0, temp_color);
 		texture.Apply();
 		gameObject.GetComponent.<Renderer>().material.SetTexture("_MainTex", texture);
+	}
+	
+	function Texture_Change(temp_color: Color, area_object : GameObject)
+	{
+		var texture: Texture2D = new Texture2D(1, 1, TextureFormat.ARGB32, false);
+		texture.SetPixel(0, 0, temp_color);
+		texture.Apply();
+		area_object.GetComponent.<Renderer>().material.SetTexture("_MainTex", texture);
 	}
 }
