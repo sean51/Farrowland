@@ -25,6 +25,11 @@ public class Battle_GUI extends MonoBehaviour
 	private static var TEXT_START_Y: float = Screen.height/1.5;
 	private static var TEXT_START_X: float = Screen.width/6;
 	
+	private static var OPTIONS_HEIGHT: float = Screen.height/3.5;
+	private static var OPTIONS_WIDTH: float = Screen.width/10;
+	private static var OPTIONS_START_Y: float = Screen.height/1.5;
+	private static var OPTIONS_START_X: float = Screen.width/1.205;
+	
 	private static var RESULT_HEIGHT: float = Screen.height/5;
 	private static var RESULT_WIDTH: float = Screen.width/3;
 	private static var RESULT_START_Y: float = (Screen.height / 2) - (RESULT_HEIGHT / 2);
@@ -213,7 +218,10 @@ public class Battle_GUI extends MonoBehaviour
 		}
 		
 		//SHOW THE BATTLE TEXT
-		GUI.Box(new Rect(TEXT_START_X, TEXT_START_Y, TEXT_WIDTH, TEXT_HEIGHT), Get_Battle_Text());
+		if(!Inventory_GUI.show)
+		{
+			GUI.Box(new Rect(TEXT_START_X, TEXT_START_Y, TEXT_WIDTH, TEXT_HEIGHT), Get_Battle_Text());
+		}
 		
 		if(state == battle_state.won)
 		{
@@ -239,8 +247,8 @@ public class Battle_GUI extends MonoBehaviour
 		var spell : boolean = false;
 		if(state == battle_state.hero_turn && !spell)
 		{
-			GUI.BeginGroup(new Rect(25, 25, 150, 200));
-			GUI.Box (new Rect(0, 0, 100, 150), "");
+			GUI.BeginGroup(new Rect(OPTIONS_START_X, OPTIONS_START_Y, OPTIONS_WIDTH, OPTIONS_HEIGHT));
+			GUI.Box (new Rect(0, 0, OPTIONS_WIDTH, OPTIONS_HEIGHT), "");
 			if(GUI.Button (new Rect(10, 10, 80, 25), "Attack"))
 			{
 				meta_state = turn_state.targeting;

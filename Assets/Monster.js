@@ -4,6 +4,7 @@ public class Monster extends Attributes
 
 	function Monster()
 	{
+		equipped = new Items[6];
 		name = "Monster";
 		damage = 5;
 		health = 20;

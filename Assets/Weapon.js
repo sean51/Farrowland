@@ -1,6 +1,6 @@
 ﻿public class Weapon extends Items 
 {
-	var damage : int;
+	private var damage : int;
 	var speed : int;
 	var defense : int;
 	
@@ -19,6 +19,7 @@
 		name = new_name;
 		damage = new_damage;
 		speed = new_speed;
+		tooltip = name+"\nDamage: "+damage+"\nSpeed: "+speed+"\nDefense: "+defense+"\n\nPrice: "+price;
 	}
 	
 	function Weapon(num : int)
@@ -67,6 +68,11 @@
 				health = 0;
 		}
 		tooltip = name+"\nDamage: "+damage+"\nSpeed: "+speed+"\nDefense: "+defense+"\n\nPrice: "+price;
+	}
+	
+	function Get_Damage() : int
+	{
+		return damage;
 	}
 	
 	function Create_Random() : Weapon{

@@ -5,6 +5,7 @@ public class Master extends MonoBehaviour
 	private var option: Option_GUI;
 	private var navigation: Navigation_GUI;
 	private var fight : Battle_GUI;
+	private var inventory : Inventory_GUI;
 
 	private var dungeon: Area[,];
 	private var dungeon_size : int = 10;
@@ -16,9 +17,6 @@ public class Master extends MonoBehaviour
 
 	function Start () 
 	{
-		//
-		//Debug.Log(Weapon_Generator.Generate().Get_Name());
-		//
 		dungeon = new Area[dungeon_size, dungeon_size];
 		for(var i: int = 0; i < dungeon_size; i++)
 		{
@@ -32,6 +30,11 @@ public class Master extends MonoBehaviour
 		option.enabled = false;
 		fight = gameObject.AddComponent.<Battle_GUI>();
 		fight.enabled = false;
+		inventory = gameObject.AddComponent.<Inventory_GUI>();
+		inventory.Populate(player.Get_Backpack(), player.Get_Equipped());
+		//
+		player.Add_Item(Weapon_Generator.Generate());
+		//
 		navigation = gameObject.AddComponent.<Navigation_GUI>();
 		navigation.Set_Options([position[0] < dungeon_size - 1, position[0] > 0, position[1] > 0, position[1] < dungeon_size - 1]);
 		current_type = gui_type.nav;
@@ -52,7 +55,6 @@ public class Master extends MonoBehaviour
 		{
 			if(fight.Get_State() == battle_state.done)
 			{
-				//fight.Reset();
 				dungeon[position[0],position[1]].Clear();
 				Set_GUI(gui_type.nav);
 			}
@@ -104,9 +106,6 @@ public class Master extends MonoBehaviour
 				break;
 			case gui_type.fight:
 				fight.Set_Fight([player], dungeon[position[0], position[1]].Get_Monsters());
-				
-				//battle = new Battle(player, dungeon[position[0], position[1]].Get_Monsters());
-				
 				fight.enabled = true;
 				break;
 		}	

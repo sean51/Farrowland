@@ -2,7 +2,7 @@
 public class Attributes {
 //asd
 	///Item Info Start
-	var equiped_item : int[] = [0,0];
+	protected var equipped : Items[];
 	///Item Info End
 	
 	/// Attributes Start
@@ -53,7 +53,15 @@ public class Attributes {
 	
 	function Get_Damage(): int 
 	{
-		return damage;
+		//return damage;
+		if(equipped[0] != null)
+		{
+			return (equipped[0] as Weapon).Get_Damage();
+		}
+		else
+		{
+			return damage;
+		}
 	}
 	/*MODIFICATIONS*/
 	
@@ -90,10 +98,6 @@ public class Attributes {
 	function Get_Is_Cleansed(): boolean
 	{
 		return is_cleansed;
-	}
-	function Get_Equiped_Item(): Object
-	{
-		return equiped_item[0];
 	}
 	function Get_Max_Health(): int
 	{
@@ -171,15 +175,15 @@ public class Attributes {
 	}
 	
 	/////////////////////////////////////////////////////// fix this weapon swap
-	function Set_New_Item(the_new_item : int): int[]
-	{
-		Old_Item_To_Inventory();
-		if(the_new_item == 1)
-		{
+	//function Set_New_Item(the_new_item : int): int[]
+	//{
+		//Old_Item_To_Inventory();
+		//if(the_new_item == 1)
+		//{
 //			equiped_item[the_new_item, 0];
-		}
-		return equiped_item;
-	}
+		//}
+		//return equiped_item;
+	//}
 	function Old_Item_To_Inventory() : int
 	{
 //		var item_type : int = 0;

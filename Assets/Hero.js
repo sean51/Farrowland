@@ -1,10 +1,13 @@
 ﻿#pragma strict 
 public class Hero extends Attributes 
-{//asd
+{
 	var hero_type : int = 0; // used to figure out your stats after choosing the type of character you wish to play as.
-
+	private var backpack : Items[];
+	
 	function Hero()
 	{
+		backpack = new Items[18];
+		equipped = new Items[6];
 		name = "Hero";
 		damage = 20;
 		health = 60;
@@ -12,6 +15,28 @@ public class Hero extends Attributes
 		armor = 5;
 		speed = 2;
 		magic_damage = 5;
+	}
+	
+	function Get_Backpack() : Items[]
+	{
+		return backpack;
+	}
+	
+	function Get_Equipped() : Items[]
+	{
+		return equipped;
+	}
+	
+	function Add_Item(new_item : Items)
+	{
+		for (var i : int = 0; i < backpack.length; i++)
+		{
+			if (backpack[i] == null)
+			{
+				backpack[i] = new_item;
+				break;
+			}
+		}
 	}
 	
 	function setType(theType : int)
