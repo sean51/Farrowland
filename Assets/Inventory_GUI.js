@@ -15,20 +15,18 @@ public class Inventory_GUI extends MonoBehaviour
 	private static var INVENTORY_START_Y: float = Screen.height/1.5;
 	private static var INVENTORY_START_X: float = Screen.width/6;
 	
-	private static var ITEM_WIDTH: float = INVENTORY_WIDTH / 10.7;
-	private static var ITEM_START_Y: float = INVENTORY_HEIGHT / 10;
-	private static var ITEM_START_X: float = INVENTORY_WIDTH / 40;
-	private static var ITEM_HEIGHT: float = (INVENTORY_HEIGHT - ITEM_START_Y) / 3;
+	public static var ITEM_WIDTH: float = INVENTORY_WIDTH / 10.7;
+	public static var ITEM_START_Y: float = INVENTORY_HEIGHT / 10;
+	public static var ITEM_START_X: float = INVENTORY_WIDTH / 40;
+	public static var ITEM_HEIGHT: float = (INVENTORY_HEIGHT - ITEM_START_Y) / 3;
 	
 	private static var EQUIPPED_HEIGHT: float = INVENTORY_HEIGHT;
 	private static var EQUIPPED_WIDTH: float = (ITEM_WIDTH * 2) + (ITEM_START_X * 2);
 	private static var EQUIPPED_START_Y: float = 0f;
 	private static var EQUIPPED_START_X: float = 0f;
 	
-	private static var TOOL_WIDTH: float = 100f;
-	
 	private static var INFO_HEIGHT: float = INVENTORY_HEIGHT;
-	private static var INFO_WIDTH: float = TOOL_WIDTH;
+	public static var INFO_WIDTH: float = 100f;
 	private static var INFO_START_Y: float = 0f;
 	private static var INFO_START_X: float = EQUIPPED_WIDTH;
 	

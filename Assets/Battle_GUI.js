@@ -33,6 +33,11 @@ public class Battle_GUI extends MonoBehaviour
 	private static var OK_START_Y: float = RESULT_HEIGHT - OK_HEIGHT;
 	private static var OK_START_X: float = (RESULT_WIDTH / 2) - (OK_WIDTH / 2);
 	
+	private static var LOOT_HEIGHT: float = (Inventory_GUI.ITEM_HEIGHT * 2) + Inventory_GUI.ITEM_START_Y;
+	private static var LOOT_WIDTH: float = (Inventory_GUI.ITEM_WIDTH * 5) + Inventory_GUI.INFO_WIDTH;
+	private static var LOOT_START_Y: float = (Screen.height / 2) - (LOOT_HEIGHT / 2);
+	private static var LOOT_START_X: float = (Screen.width / 2) - (LOOT_WIDTH / 2);
+	
 	var target : Attributes;
 	
 	function Set_Fight(new_heroes : Hero[], new_enemies : Monster[])
@@ -156,7 +161,9 @@ public class Battle_GUI extends MonoBehaviour
 		if(all_dead) 
 		{
 			Messenger.Text("You have won");
+			meta_state = turn_state.looting;
 			state = battle_state.won;
+			Calculate_Loot();
 		}
 		
 		yield WaitForSeconds(TURN_TIMER);
@@ -167,13 +174,20 @@ public class Battle_GUI extends MonoBehaviour
 		}
 	}
 	
+	function Calculate_Loot()
+	{
+		
+	}
+	
 	function OnGUI ()
 	{
 		//SHOW THE ENEMIES
 		if(enemies != null)
 		{	
-			if(enemies.length < 2) {
-				if(meta_state == turn_state.targeting){
+			if(enemies.length < 2) 
+			{
+				if(meta_state == turn_state.targeting)
+				{
 					if(GUI.Button (new Rect (MONSTER_START_X , MONSTER_START_Y, MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[0].Get_Name(), enemies[0].Get_Tooltip())))
 					{
 						if(meta_state == turn_state.targeting)
@@ -184,7 +198,9 @@ public class Battle_GUI extends MonoBehaviour
 							Turn_Finished();
 						}
 					}
-				} else {
+				} 
+				else 
+				{
 					GUI.Box (new Rect (MONSTER_START_X, MONSTER_START_Y, MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[0].Get_Name(), enemies[0].Get_Tooltip()));
 				}
 				var centeredStyle = GUI.skin.GetStyle("Label");
@@ -198,7 +214,8 @@ public class Battle_GUI extends MonoBehaviour
 				{
 					if(enemies[i].Get_Alive())
 					{
-						if(i >= Mathf.Ceil(enemies.length/2)){
+						if(i >= Mathf.Ceil(enemies.length/2))
+						{
 							var j = 3.25f;
 						} else {
 							j = 0;
@@ -220,7 +237,9 @@ public class Battle_GUI extends MonoBehaviour
 							centeredStyle.alignment = TextAnchor.UpperCenter;
 							GUI.Label(new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2)), MONSTER_START_Y  + (MONSTER_START_Y * j) + MONSTER_HEIGHT, MONSTER_WIDTH, MONSTER_HEIGHT * 5), GUI.tooltip, centeredStyle);
 							GUI.tooltip = null;
-						} else {
+						} 
+						else 
+						{
 							if(meta_state == turn_state.targeting)
 							{
 								if(GUI.Button (new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2 + 1)), MONSTER_START_Y + (MONSTER_START_Y * j), MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[i].Get_Name(), enemies[i].Get_Tooltip())))
@@ -231,7 +250,8 @@ public class Battle_GUI extends MonoBehaviour
 									Turn_Finished();
 								}
 							}
-							 else {
+							 else 
+							 {
 								GUI.Box (new Rect (MONSTER_START_X * (i % Mathf.Ceil(enemies.length/2 + 1)), MONSTER_START_Y + (MONSTER_START_Y * j), MONSTER_WIDTH, MONSTER_HEIGHT), new GUIContent(enemies[i].Get_Name(), enemies[i].Get_Tooltip()));
 							}
 							centeredStyle = GUI.skin.GetStyle("Label");
@@ -244,7 +264,26 @@ public class Battle_GUI extends MonoBehaviour
 			}
 		}
 		
-		if(state == battle_state.won)
+		if(state == battle_state.won && meta_state == turn_state.looting)
+		{
+			GUI.BeginGroup(new Rect(LOOT_START_X, LOOT_START_Y, LOOT_WIDTH, LOOT_HEIGHT));
+			GUI.Box(new Rect(0, 0, LOOT_WIDTH - Inventory_GUI.INFO_WIDTH - Inventory_GUI.ITEM_WIDTH, LOOT_HEIGHT), "LOOT");
+			GUI.Box(new Rect(LOOT_WIDTH - Inventory_GUI.INFO_WIDTH - Inventory_GUI.ITEM_WIDTH, 0, Inventory_GUI.INFO_WIDTH, LOOT_HEIGHT), "INFO");
+			GUI.Box(new Rect(LOOT_WIDTH - Inventory_GUI.ITEM_WIDTH, 0, Inventory_GUI.ITEM_WIDTH, LOOT_HEIGHT), "DONE");
+			for (var loot_index : int = 0; loot_index < 8; loot_index++)
+			{
+				if(GUI.Button (new Rect (Inventory_GUI.ITEM_WIDTH * (loot_index % 4), Inventory_GUI.ITEM_START_Y + (Inventory_GUI.ITEM_HEIGHT * (loot_index / 4)), Inventory_GUI.ITEM_WIDTH, Inventory_GUI.ITEM_HEIGHT), "OK"))
+				{
+					meta_state = turn_state.idle;
+				}
+			}
+			if(GUI.Button (new Rect (LOOT_WIDTH - Inventory_GUI.ITEM_WIDTH, (LOOT_HEIGHT / 2) - (Inventory_GUI.ITEM_HEIGHT / 2), Inventory_GUI.ITEM_WIDTH, Inventory_GUI.ITEM_HEIGHT), "OK"))
+			{
+				meta_state = turn_state.idle;
+			}
+			GUI.EndGroup();
+		}
+		else if(state == battle_state.won)
 		{
 			GUI.BeginGroup(new Rect(RESULT_START_X, RESULT_START_Y, RESULT_WIDTH, RESULT_HEIGHT));
 			GUI.Box(new Rect(0, 0, RESULT_WIDTH, RESULT_HEIGHT), "YOU HAVE WON!");
@@ -298,7 +337,8 @@ public class Battle_GUI extends MonoBehaviour
 			GUI.EndGroup();
 		}
 		
-		if(escape_attempt){
+		if(escape_attempt)
+		{
 			if(decision > 1.5f) 
 			{
 				GUI.BeginGroup(new Rect(RESULT_START_X, RESULT_START_Y, RESULT_WIDTH, RESULT_HEIGHT));
@@ -321,7 +361,8 @@ public class Battle_GUI extends MonoBehaviour
 				GUI.EndGroup();
 			}
 		}
-	
+		
+		//UNFINISHED SHIT v
 		if(spell) 
 		{
 	    	GUI.BeginGroup(new Rect(25, 25, 150, 200));
