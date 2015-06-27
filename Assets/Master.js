@@ -1,5 +1,7 @@
 ﻿#pragma strict
 
+import System.Collections.Generic;
+
 public class Master extends MonoBehaviour
 {
 	public var up : GameObject;
