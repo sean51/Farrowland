@@ -13,7 +13,7 @@ public class Quest extends Area
 	function Quest(completion : boolean, quest_taken : boolean)
 	{
 		is_complete = completion;
-		has_quest = quest_taken;
+		//has_quest = quest_taken;
 	}
 
 }
