@@ -22,13 +22,18 @@ public class Master extends MonoBehaviour
 	private var current_zone: Area[,];
 	private var zone_size : int = 10;
 	private var position: int[];
+	private var map : String = "";
 
 	private var current_type: gui_type;
 	
 	private var player : Hero = new Hero();
 
+	//private var DELETE_THIS : Maze_Test;
+	//private var DELETE_THIS_TOO : Node[,];
+	
 	function Start () 
 	{
+		//DELETE_THIS = gameObject.AddComponent.<Maze_Test>();
 		//Create_Zone(zone.dungeon, 10);
 		Create_Zone(zone.town, 3);
 		Start_GUI();
@@ -112,7 +117,7 @@ public class Master extends MonoBehaviour
 		switch(zone_type)
 		{
 			case zone.dungeon:
-				switch (Random.Range(0,3))
+				switch (Random.Range(0, 3))
 				{
 					case 0: position = [zone_size - 1, zone_size - 1];
 						break;
@@ -123,6 +128,14 @@ public class Master extends MonoBehaviour
 					case 3: position = [0,0];
 						break;
 				}
+				//DELETE
+				position = [zone_size - 1, zone_size - 1];
+				//CREATE WALLS AKA WTF
+				var wall_matrix : Node[,] = Create_Walls([0, 0]);
+				map = Get_Map(wall_matrix);
+				//DELETE
+				//DELETE_THIS_TOO = wall_matrix;
+				//#WALLS CREATED
 				for(var i: int = 0; i < zone_size; i++)
 				{
 					for(var j: int = 0; j < zone_size; j++)
@@ -135,6 +148,7 @@ public class Master extends MonoBehaviour
 						{
 							current_zone[i,j] = new Area(1);
 						}
+						current_zone[i, j].Set_Walls(wall_matrix[i, j].Get_Walls());
 					}
 				}
 				break;
@@ -162,11 +176,130 @@ public class Master extends MonoBehaviour
 		}
 	}
 	
+	function Create_Walls(exit : int[]) : Node[,]
+	{
+		//CREATE A NEW WALL MATRIX
+		var wall_matrix : Node[,] = new Node[zone_size, zone_size];
+		
+		//CREATE ALL NEW NODES IN THE WALL MATRIX
+		for(var i : int = 0; i < zone_size; i++)
+		{
+			for(var j : int = 0; j < zone_size; j++)
+			{
+				wall_matrix[i, j] = new Node();
+			}
+		}
+		
+		//TELL ALL THE NODES ABOUT THE NODES AROUND THEM
+		for(i = 0; i < zone_size; i++)
+		{
+			for(j = 0; j < zone_size; j++)
+			{
+				if (i - 1 >= 0)
+				{
+					wall_matrix[i, j].down = wall_matrix[i - 1, j];
+				}
+				if (i + 1 < zone_size)
+				{
+					wall_matrix[i, j].up = wall_matrix[i + 1, j];
+					
+				}
+				if (j - 1 >= 0)
+				{
+					wall_matrix[i, j].left = wall_matrix[i, j - 1];
+				}
+				if (j + 1 < zone_size)
+				{
+					wall_matrix[i, j].right = wall_matrix[i, j + 1];
+				}
+			}
+		}
+		
+		//TELL THE EXIT THAT IT IS THE EXIT
+		wall_matrix[exit[0], exit[1]].exit = true;
+		
+		//START THE DEPTH-FIRST-SEARCH WITH THE ENTRANCE
+		Depth_Create(wall_matrix[position[0], position[1]]);
+		
+		//RETURN THE FINISHED WALL MATRIX
+		return wall_matrix;
+	}
+	
+	function Depth_Create (current : Node)
+	{
+		
+		current.visited = true;
+		
+		if(current.exit)
+		{
+			return;
+		}
+		
+		var directions : List.<int>;
+		
+		while (true)
+		{
+			directions = new List.<int>();
+			
+			if(current.left != null && !current.left.visited)
+			{
+				directions.Add(0);
+			}
+			if(current.right != null && !current.right.visited)
+			{
+				directions.Add(1);
+			}
+			if(current.up != null && !current.up.visited)
+			{
+				directions.Add(2);
+			}
+			if(current.down != null && !current.down.visited)
+			{
+				directions.Add(3);
+			}
+			
+			if (directions.Count == 0)
+			{
+				return;
+			}
+			
+			var nextNode : int = directions[Random.Range(0, directions.Count)];
+			
+			switch(nextNode)
+			{
+				case 0: //WE ARE GOING LEFT
+					current.left_wall = false;
+					current.left.right_wall = false;
+					Depth_Create(current.left);
+					break;
+				case 1: //WE ARE GOING RIGHT
+					current.right_wall = false;
+					current.right.left_wall = false;
+					Depth_Create(current.right);
+					break;
+				case 2: //WE ARE GOING UP
+					current.ceiling = false;
+					current.up.floor = false;
+					Depth_Create(current.up);
+					break;
+				case 3: //WE ARE GOING DOWN
+					current.floor = false;
+					current.down.ceiling = false;
+					Depth_Create(current.down);
+					break;
+			}
+		}
+	}
+	
 	function New_Area()
 	{
+		//DELETE THIS SHIT
+		//if(DELETE_THIS_TOO != null)
+		//DELETE_THIS.Set_Printing(Get_Map(DELETE_THIS_TOO));
 		Recolor();
 		current_zone[position[0], position[1]].Begin();
-		navigation.Set_Options([position[0] < zone_size - 1, position[0] > 0, position[1] > 0, position[1] < zone_size - 1]);
+		navigation.Set_Options(current_zone[position[0], position[1]].Get_Movement());
+		//navigation.Set_Options([position[0] < zone_size - 1, position[0] > 0, position[1] > 0, position[1] < zone_size - 1]);
 		navigation.Reset();
 		Set_GUI(current_zone[position[0], position[1]].Get_Type());
 	}
@@ -206,9 +339,11 @@ public class Master extends MonoBehaviour
 	
 	private function Color_Surrounding()
 	{
-		//UP, DOWN, LEFT, RIGHT
 		var boundaries : boolean[] = [position[0] + 1 < zone_size, position[0] != 0, position[1] != 0, position[1] + 1 < zone_size];
-		if(boundaries[0])
+		var wall_check : boolean[] = current_zone[position[0], position[1]].Get_Movement();
+		var wall_in_question : Area;
+		
+		if (boundaries[0] && wall_check[0])
 		{
 			Texture_Change(current_zone[position[0] + 1, position[1]].Get_Color(), up);
 		}
@@ -216,23 +351,7 @@ public class Master extends MonoBehaviour
 		{
 			Texture_Change(Color.black, up);
 		}
-		if(boundaries[0] && boundaries[2])
-		{
-			Texture_Change(current_zone[position[0] + 1, position[1] - 1].Get_Color(), ul);
-		}
-		else
-		{
-			Texture_Change(Color.black, ul);
-		}
-		if(boundaries[0] && boundaries[3])
-		{
-			Texture_Change(current_zone[position[0] + 1, position[1] + 1].Get_Color(), ur);
-		}
-		else
-		{
-			Texture_Change(Color.black, ur);
-		}
-		if(boundaries[1])
+		if (boundaries[1] && wall_check[1])
 		{
 			Texture_Change(current_zone[position[0] - 1, position[1]].Get_Color(), down);
 		}
@@ -240,23 +359,7 @@ public class Master extends MonoBehaviour
 		{
 			Texture_Change(Color.black, down);
 		}
-		if(boundaries[1] && boundaries[2])
-		{
-			Texture_Change(current_zone[position[0] - 1, position[1] - 1].Get_Color(), dl);
-		}
-		else
-		{
-			Texture_Change(Color.black, dl);
-		}
-		if(boundaries[1] && boundaries[3])
-		{
-			Texture_Change(current_zone[position[0] - 1, position[1] + 1].Get_Color(), dr);
-		}
-		else
-		{
-			Texture_Change(Color.black, dr);
-		}
-		if(boundaries[2])
+		if (boundaries[2] && wall_check[2])
 		{
 			Texture_Change(current_zone[position[0], position[1] - 1].Get_Color(), left);
 		}
@@ -264,13 +367,101 @@ public class Master extends MonoBehaviour
 		{
 			Texture_Change(Color.black, left);
 		}
-		if(boundaries[3])
+		if (boundaries[3] && wall_check[3])
 		{
 			Texture_Change(current_zone[position[0], position[1] + 1].Get_Color(), right);
 		}
 		else
 		{
 			Texture_Change(Color.black, right);
+		}
+		//DO YOU EXIST?
+		if(boundaries[0] && boundaries[2])
+		{
+			//DO I NOT HAVE A TOP WALL							//DO YOU NOT HAVE A RIGHT WALL
+			if(wall_check[0] && current_zone[position[0] + 1, position[1] - 1].Get_Movement()[3])
+			{
+				Texture_Change(current_zone[position[0] + 1, position[1] - 1].Get_Color(), ul);
+			}
+			//DO I NOT HAVE A LEFT WALL                          //DO YOU NOT HAVE A BOTTOM
+			else if(wall_check[2] && current_zone[position[0] + 1, position[1] - 1].Get_Movement()[1])
+			{
+				Texture_Change(current_zone[position[0] + 1, position[1] - 1].Get_Color(), ul);
+			}
+			else
+			{
+				Texture_Change(Color.black, ul);
+			}
+		}
+		else
+		{
+			Texture_Change(Color.black, ul);
+		}
+		//DO YOU EXIST?
+		if(boundaries[0] && boundaries[3])
+		{
+			//DO I NOT HAVE A TOP WALL?                    //DO YOU NOT HAVE A LEFT WALL?
+			if (wall_check[0] && current_zone[position[0] + 1, position[1] + 1].Get_Movement()[2])
+			{
+				Texture_Change(current_zone[position[0] + 1, position[1] + 1].Get_Color(), ur);
+			}
+			//DO I NOT HAVE A RIGHT WALL?                            //DO YOU NOT HAVE A BOTTOM WALL
+			else if (wall_check[3] && current_zone[position[0] + 1, position[1] + 1].Get_Movement()[1])
+			{
+				Texture_Change(current_zone[position[0] + 1, position[1] + 1].Get_Color(), ur);			
+			}
+			else
+			{
+				Texture_Change(Color.black, ur);
+			}
+		}
+		else
+		{
+			Texture_Change(Color.black, ur);
+		}
+		//DO YOU EXIST?
+		if(boundaries[1] && boundaries[2])
+		{
+			//DO I NOT HAVE A BOTTOM              //DO YOU NOT HAVE A RIGHT?
+			if (wall_check[1] && current_zone[position[0] - 1, position[1] - 1].Get_Movement()[3])
+			{
+				Texture_Change(current_zone[position[0] - 1, position[1] - 1].Get_Color(), dl);
+			}
+			//DO I NOT HAVE A LEFT?                                 //YOU YOU NOT HAVE A TOP?
+			else if (wall_check[2] && current_zone[position[0] - 1, position[1] - 1].Get_Movement()[0])
+			{
+				Texture_Change(current_zone[position[0] - 1, position[1] - 1].Get_Color(), dl);
+			}
+			else
+			{
+				Texture_Change(Color.black, dl);
+			}
+		}
+		else
+		{
+			Texture_Change(Color.black, dl);
+		}
+		//DO YOU EXIST?
+		if(boundaries[1] && boundaries[3])
+		{
+			//DO I NOT HAVE A BOTTOM                   //DO YOU NOT HAVE A LEFT?
+			if (wall_check[1] && current_zone[position[0] - 1, position[1] + 1].Get_Movement()[2])
+			{
+				Texture_Change(current_zone[position[0] - 1, position[1] + 1].Get_Color(), dr);
+			}
+			//DO I NOT HAVE A RIGHT?						//DO YOU NOT HAVE A TOP
+			else if (wall_check[3] && current_zone[position[0] - 1, position[1] + 1].Get_Movement()[0])
+			{
+				Texture_Change(current_zone[position[0] - 1, position[1] + 1].Get_Color(), dr);
+			}
+			else
+			{
+				Texture_Change(Color.black, dr);
+			}
+		}
+		else
+		{
+			Texture_Change(Color.black, dr);
 		}
 	}
 
@@ -288,5 +479,105 @@ public class Master extends MonoBehaviour
 		texture.SetPixel(0, 0, temp_color);
 		texture.Apply();
 		area_object.GetComponent.<Renderer>().material.SetTexture("_MainTex", texture);
+	}
+	
+	function Get_Map(printed_area : Node[,]) : String
+	{
+		var wall : String = "\\";
+		var roof : String = "-";
+		var space : String = " ";
+		var current : String = "X";
+		
+		var CLOSED_TOP : String = (roof + roof + space + space + roof + roof + space + space);
+		var OPEN_TOP : String = (roof + roof + space + space + space + space + space + space);
+		var OPEN_LEFT : String = (space + space + space + space) + (space + space + space + space);
+		var CLOSED_LEFT : String = (wall + wall + space + space) + (space + space + space + space);
+		var OPEN_LEFT_X : String = (space + space + space + current) + (space + space + space + space);
+		var CLOSED_LEFT_X : String = (wall + wall + space + current) + (space + space + space + space);
+		
+		var sb : String = "";
+		//printed_area[0,0].ceiling = false;
+		
+		for (var i : int = zone_size - 1; i >= 0; i--)
+		{
+			for (var j : int = 0; j < zone_size; j++)
+			{
+				if (printed_area[i, j].ceiling)
+				{
+					sb += CLOSED_TOP;
+				}
+				else
+				{
+					sb += OPEN_TOP;
+				}
+			}
+			sb += "-\n";
+			for (j = 0; j < zone_size; j++)
+			{
+				if(printed_area[i, j].left_wall)
+				{
+					if (position[0] == i && position[1] == j)
+					{
+						sb += CLOSED_LEFT_X;
+					}
+					else
+					{
+						sb += CLOSED_LEFT;
+					}
+				}
+				else
+				{
+					if (position[0] == i && position[1] == j)
+					{
+						sb += OPEN_LEFT_X;
+					}
+					else
+					{
+						sb += OPEN_LEFT;
+					}
+				}
+			}
+			sb += wall + "\n";
+		}
+		sb += (roof + space);
+		for(i = 0; i < zone_size; i++)
+		{
+			sb += (roof + space + roof + space) + (roof + space + roof + space);
+		}
+		//sb += (roof + space + space + space) + (space + space + space + roof) + "\n";
+		return sb;
+	}
+	
+	private class Node
+	{
+		public var up : Node = null;
+		public var down : Node = null;
+		public var left : Node = null;
+		public var right : Node = null;
+		public var ceiling : boolean = true;
+		public var floor : boolean = true;
+		public var left_wall : boolean = true;
+		public var right_wall : boolean = true;
+		public var visited : boolean = false;
+		public var exit : boolean = false;
+		
+		function Node()
+		{
+			up = null;
+			down = null;
+			left = null;
+			right = null;
+			ceiling = true;
+			floor = true;
+			left_wall = true;
+			right_wall = true;
+			visited = false;
+			exit = false;
+		}
+		
+		function Get_Walls() : boolean[]
+		{
+			return [ceiling, floor, left_wall, right_wall];
+		}
 	}
 }

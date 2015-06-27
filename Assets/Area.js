@@ -15,6 +15,10 @@ public class Area
 	private var location_size : int;
 	private var location : zone;
 	
+	//NAVIGATION
+	private var walls : boolean[] = [false, false, false, false];
+	private var movement : boolean[] = [true, true, true, true];
+	
 	function Area () 
 	{
 		my_texture_color = Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1);
@@ -117,9 +121,28 @@ public class Area
 		}
 	}
 	
+	function Set_Walls(wall_allowances : boolean[])
+	{
+		for (var i : int = 0; i < wall_allowances.length; i++)
+		{
+			movement[i] = !wall_allowances[i];
+			walls[i] = wall_allowances[i];
+		}
+	}
+	
 	function Begin()
 	{
 		Messenger.Text(dialog);
+	}
+	
+	function Get_Walls(): boolean[]
+	{
+		return walls;
+	}
+	
+	function Get_Movement(): boolean[]
+	{
+		return movement;
 	}
 	
 	function Get_Color(): Color
