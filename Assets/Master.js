@@ -20,6 +20,12 @@ public class Master extends MonoBehaviour
 	private var text : Text_GUI;
 	private var player_text : Player_GUI;
 	private var travel : Travel_GUI;
+	private var weapon_shop : Weapon_Shop_GUI;
+	private var armor_shop : Armor_Shop_GUI;
+	private var amulet_shop : Amulet_Shop_GUI;
+	private var potion_shop : Potion_Shop_GUI;
+	private var magic_shop : Magic_Shop_GUI;
+	private var costco : Costco_Shop_GUI;
 
 	private var current_zone: Area[,];
 	private var zone_size : int = 10;
@@ -57,6 +63,19 @@ public class Master extends MonoBehaviour
 		player_text = gameObject.AddComponent.<Player_GUI>();
 		player_text.Set(player);
 		navigation = gameObject.AddComponent.<Navigation_GUI>();
+		weapon_shop = gameObject.AddComponent.<Weapon_Shop_GUI>();
+		weapon_shop.Set(player);
+		armor_shop = gameObject.AddComponent.<Armor_Shop_GUI>();
+		armor_shop.Set(player);
+		amulet_shop = gameObject.AddComponent.<Amulet_Shop_GUI>();
+		amulet_shop.Set(player);
+		potion_shop = gameObject.AddComponent.<Potion_Shop_GUI>();
+		potion_shop.Set(player);
+		magic_shop = gameObject.AddComponent.<Magic_Shop_GUI>();
+		magic_shop.Set(player);
+		costco = gameObject.AddComponent.<Costco_Shop_GUI>();
+		costco.Set(player);
+		
 	}
 	
 	/*
@@ -314,6 +333,12 @@ public class Master extends MonoBehaviour
 		fight.enabled = false;
 		navigation.enabled = false;
 		travel.enabled = false;
+		weapon_shop.enabled = false;
+		armor_shop.enabled = false;
+		amulet_shop.enabled = false;
+		potion_shop.enabled = false;
+		magic_shop.enabled = false;
+		costco.enabled = false;
 		
 		switch(new_type)
 		{
@@ -330,6 +355,24 @@ public class Master extends MonoBehaviour
 				fight.Set_Fight([player], current_zone[position[0], position[1]].Get_Monsters());
 				fight.enabled = true;
 				break;
+			case gui_type.weapon_shop:	
+				weapon_shop.enabled = true;
+				navigation.enabled = true;
+			case gui_type.armor_shop:	
+				armor_shop.enabled = true;
+				navigation.enabled = true;
+			case gui_type.amulet_shop:	
+				amulet_shop.enabled = true;
+				navigation.enabled = true;
+			case gui_type.potion_shop:	
+				potion_shop.enabled = true;
+				navigation.enabled = true;
+			case gui_type.magic_shop:	
+				magic_shop.enabled = true;
+				navigation.enabled = true;
+			case gui_type.costco_shop:	
+				costco.enabled = true;
+				navigation.enabled = true;
 		}	
 	}
 	

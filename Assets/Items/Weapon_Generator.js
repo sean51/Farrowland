@@ -2,19 +2,45 @@
 
 public static class Weapon_Generator
 {
+
+	var roll_1 : int;
+	var roll_2 : int;
+	var roll_3 : int;
+
+	var name : String;
+	var damage : int;
+	var speed : int;
+	var defense : int;
+	var magic : int;
+	var price : int;
+	
 	function Generate() : Weapon
 	{
-		var roll_1 : int = Random.Range(10, 99);
-		var roll_2 : int = Random.Range(0, 2);
-		var roll_3 : int = Random.Range(10, 99);
+		roll_1 = Random.Range(10, 99);
+		roll_2 = Random.Range(0, 2);
+		roll_3 = Random.Range(10, 99);
 		
-		var name : String = Prefix(roll_1) + Weapon_Type(roll_2, roll_3);
-		var damage : int = Calculate_Damage(roll_1, roll_2, roll_3);
-		var speed : int = Calculate_Speed(roll_1, roll_2, roll_3);
+		name = Prefix(roll_1) + Weapon_Type(roll_2, roll_3);
+		damage = Calculate_Damage(roll_1, roll_2, roll_3);
+		speed = Calculate_Speed(roll_1, roll_2, roll_3);
+		defense = Calculate_Defense(roll_1, roll_3);
+		magic = Calculate_Magic(roll_1, roll_3);
+		price = Calculate_Price(roll_1, roll_3);
 		
-		var random_weapon : Weapon = new Weapon(name, damage, speed);
+		var random_weapon : Weapon = new Weapon(name, damage, speed, defense, magic, price);
 		
 		return random_weapon;
+	}
+	
+	function Generate_Specific(prefix : int, tpye : int, quality : int) : Weapon
+	{
+		name = Prefix(roll_1) + Weapon_Type(roll_2, roll_3);
+		damage = Calculate_Damage(roll_1, roll_2, roll_3);
+		speed = Calculate_Speed(roll_1, roll_2, roll_3);
+		
+		var specific_weapon : Weapon = new Weapon(name, damage, speed);
+		
+		return specific_weapon;
 	}
 	
 	private function Calculate_Damage(prefix_roll : int, type_roll : int, quality_roll : int) : int
@@ -45,6 +71,24 @@ public static class Weapon_Generator
 				break;
 		}
 		return speed_calc;
+	}
+	
+	private function Calculate_Defense(prefix_roll : int, quality_roll : int)
+	{
+		var def_calc : int = prefix_roll / 20;
+		return def_calc;
+	}
+	
+	private function Calculate_Magic(prefix_roll : int, quality_roll : int)
+	{
+		var mag_calc : int = (prefix_roll / 15);
+		return mag_calc;
+	}
+	
+	private function Calculate_Price(prefix_roll : int, quality_roll : int)
+	{
+		var price_calc : int = prefix_roll * (quality_roll+1);
+		return price_calc;
 	}
 	
 	private function Weapon_Type(type_roll : int, quality_roll : int) : String
