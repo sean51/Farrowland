@@ -44,7 +44,12 @@ public class Battle_GUI extends MonoBehaviour
 	
 	function Set_Fight(new_heroes : Hero[], new_enemies : Monster[])
 	{
-		loot = new Items[new_enemies.Length];
+//		var lootSize : int;
+//		for(var i = 0; i < new_enemies.Length; i++) 
+//		{
+//			lootSize += new_enemies[i].Get_Loot().Length;
+//		}
+//		loot = new Items[lootSize];
 		state = battle_state.idle;
 		meta_state = turn_state.idle;
 		turn_counter = 0;
@@ -54,7 +59,7 @@ public class Battle_GUI extends MonoBehaviour
 		heroes = new Hero[new_heroes.length];
 		var people_in_play = new Attributes[new_enemies.length + new_heroes.length];
 		
-		for(var i : int  = 0; i < new_heroes.length; i++)
+		for(var i = 0; i < new_heroes.length; i++)
 		{
 			heroes[i] = new_heroes[i];
 			people_in_play[i] = new_heroes[i];	
@@ -179,9 +184,35 @@ public class Battle_GUI extends MonoBehaviour
 	
 	function Calculate_Loot()
 	{
-		for(var k = 0; k < enemies.length; k++) {
-			loot[k] = Weapon_Generator.Generate();
+		var loot_num : int;
+		for(var k = 0; k < enemies.Length; k++) {
+			loot_num += enemies[k].Get_Loot_Number(); 
 		}
+		
+		loot_num = Random.Range(0, loot_num);
+		
+		var loot_amount = Random.Range(1, 5);
+		loot = new Items[loot_amount];
+		
+		var loot_num_array : int[] = new int[loot_amount];
+		var percent : float[] = new float[loot_amount];
+		
+		var filled_amount : float = 0.0f;
+		
+		for(k = 0; k < loot_amount; k++) 
+		{
+			var fill_amount = Random.Range(0.0f, 1.0f);
+			filled_amount += fill_amount;
+			percent[k] = fill_amount;
+		}
+		
+		for(k = 0; k < loot_amount; k++) 
+		{
+			percent[k] = percent[k]/filled_amount;
+			loot_num_array[k] = Mathf.Round(loot_num*percent[k]);
+			loot[k] = Weapon_Generator.Generate(loot_num_array[k]);
+		}
+		
 	}
 	
 	function OnGUI ()
