@@ -16,9 +16,9 @@ public static class Weapon_Generator
 	
 	function Generate() : Weapon
 	{
-		roll_1 = Random.Range(10, 99);
-		roll_2 = Random.Range(0, 2);
-		roll_3 = Random.Range(10, 99);
+		roll_1 = Random.Range(10, 100);
+		roll_2 = Random.Range(0, 3);
+		roll_3 = Random.Range(10, 100);
 		
 		name = Prefix(roll_1) + Weapon_Type(roll_2, roll_3);
 		damage = Calculate_Damage(roll_1, roll_2, roll_3);
@@ -32,7 +32,7 @@ public static class Weapon_Generator
 		return random_weapon;
 	}
 	
-	function Generate_Specific(prefix : int, tpye : int, quality : int) : Weapon
+	function Generate(prefix : int, tpye : int, quality : int) : Weapon
 	{
 		name = Prefix(roll_1) + Weapon_Type(roll_2, roll_3);
 		damage = Calculate_Damage(roll_1, roll_2, roll_3);
@@ -41,6 +41,25 @@ public static class Weapon_Generator
 		var specific_weapon : Weapon = new Weapon(name, damage, speed);
 		
 		return specific_weapon;
+	}
+	
+	function Generate(seed : int) : Weapon
+	{
+		var percentage : float = seed / 1000;
+		roll_1 = Random.Range(10, Mathf.RoundToInt(100 * percentage));
+		roll_2 = Random.Range(0, 3);
+		roll_3 = Random.Range(10, Mathf.RoundToInt(100 * percentage));
+		
+		name = Prefix(roll_1) + Weapon_Type(roll_2, roll_3);
+		damage = Calculate_Damage(roll_1, roll_2, roll_3);
+		speed = Calculate_Speed(roll_1, roll_2, roll_3);
+		defense = Calculate_Defense(roll_1, roll_3);
+		magic = Calculate_Magic(roll_1, roll_3);
+		price = Calculate_Price(roll_1, roll_3);
+		
+		var random_weapon : Weapon = new Weapon(name, damage, speed, defense, magic, price);
+		
+		return random_weapon;
 	}
 	
 	private function Calculate_Damage(prefix_roll : int, type_roll : int, quality_roll : int) : int
