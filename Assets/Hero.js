@@ -24,6 +24,11 @@ public class Hero extends Attributes
 		return "Name: " + name + spacing + "Health: " + health + "/" + max_health + spacing + "Damage: " + Get_Damage() + spacing + "Magic: " + magic_damage + spacing + "Armor: " + armor + spacing + "Speed: " + speed + spacing + "Gold: " + gold;
 	}
 	
+	function Full_Heal()
+	{
+		health = max_health;
+	}
+	
 	function Get_Backpack() : Items[]
 	{
 		return backpack;

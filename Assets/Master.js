@@ -84,8 +84,17 @@ public class Master extends MonoBehaviour
 		{
 			if(fight.Get_State() == battle_state.done)
 			{
-				current_zone[position[0],position[1]].Clear();
-				Set_GUI(gui_type.nav);
+				if(player.Get_Health() <= 0)
+				{
+					current_type = gui_type.idle;
+					Create_Zone(zone.town, 3);
+					New_Area();
+				}
+				else
+				{
+					current_zone[position[0],position[1]].Clear();
+					Set_GUI(gui_type.nav);
+				}
 			}
 		}
 		if (current_type == gui_type.travel)
@@ -195,7 +204,7 @@ public class Master extends MonoBehaviour
 					{
 						if (k == position[0] && l == position[1])
 						{
-							current_zone[k,l] = new Area(gui_type.nav, "You are standing in the center of town.");
+							current_zone[k,l] = new Fountain(player);
 						}
 						else if (k == position[0] + 1 && l == position[1])
 						{
