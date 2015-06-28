@@ -31,7 +31,7 @@ public class Master extends MonoBehaviour
 	private var exit_position : int[];
 	private var map : String = "";
 
-	private var current_type: gui_type;
+	public var current_type: gui_type;
 	
 	private var player : Hero = new Hero();
 
@@ -42,8 +42,8 @@ public class Master extends MonoBehaviour
 	{
 		//DELETE_THIS = gameObject.AddComponent.<Maze_Test>();
 		//Create_Zone(zone.dungeon, 10);
-		Create_Zone(zone.town, 3);
 		Start_GUI();
+		Create_Zone(zone.town, 3);
 		//Give the player a random weapon
 		player.Add_Item(Weapon_Generator.Generate());
 		New_Area();
@@ -213,23 +213,19 @@ public class Master extends MonoBehaviour
 						}
 						else if (k == position[0] - 1 && l == position[1])
 						{
-							current_zone[k, l] = new Weapon_Shop();
+							current_zone[k, l] = new Weapon_Shop(shop);
 						}
 						else if (k == position[0] - 1 && l == position[1] - 1)
 						{
-							current_zone[k, l] = new Armor_Shop();
-						}
-						else if (k == position[0] && l == position[1] - 1)
-						{
-							current_zone[k, l] = new Costco_Shop();
+							current_zone[k, l] = new Armor_Shop(shop);
 						}
 						else if (k == position[0] + 1 && l == position[1] - 1)
 						{
-							current_zone[k, l] = new Potion_Shop();
+							current_zone[k, l] = new Potion_Shop(shop);
 						}
 						else if (k == position[0] + 1 && l == position[1] + 1)
 						{
-							current_zone[k, l] = new Magic_Shop();
+							current_zone[k, l] = new Magic_Shop(shop);
 						}
 						else
 						{
@@ -416,6 +412,7 @@ public class Master extends MonoBehaviour
 			case gui_type.shop:	
 				shop.enabled = true;
 				navigation.enabled = true;
+				break;
 		}	
 	}
 	

@@ -1,5 +1,17 @@
 public class Magic_Shop extends Area {
-	function Magic_Shop () {
-		my_type = gui_type.magic_shop;
+	var shop : Shop_GUI;
+	function Magic_Shop (current_shop : Shop_GUI) {
+		my_type = gui_type.shop;
+		shop = current_shop;
 	}
-}	
+	
+	function Begin() 
+	{
+		
+		var items : Items[] = new Items[12];
+		for (var i = 0; i < items.Length; i++) {
+			items[i] = Armor_Generator.Generate();
+		}
+		shop.Populate(items);
+	}
+}
