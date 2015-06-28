@@ -87,6 +87,7 @@ public class Master extends MonoBehaviour
 				if(player.Get_Health() <= 0)
 				{
 					current_type = gui_type.idle;
+					player.Revive();
 					Create_Zone(zone.town, 3);
 					New_Area();
 				}

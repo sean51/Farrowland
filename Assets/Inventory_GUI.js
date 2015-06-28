@@ -172,7 +172,7 @@ public class Inventory_GUI extends MonoBehaviour
 					{
 						if(equipped[i] != null)
 						{
-							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 2)), ITEM_START_Y + (ITEM_HEIGHT * (i % 3)) , ITEM_WIDTH, ITEM_HEIGHT), new GUIContent("ITEM", equipped[i].Get_Tooltip())))
+							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 2)), ITEM_START_Y + (ITEM_HEIGHT * (i / 2)) , ITEM_WIDTH, ITEM_HEIGHT), new GUIContent("ITEM", equipped[i].Get_Tooltip())))
 							{
 								if(state == inventory_state.idle)
 								{
@@ -192,7 +192,7 @@ public class Inventory_GUI extends MonoBehaviour
 						}
 						else
 						{
-							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 2)), ITEM_START_Y + (ITEM_HEIGHT * (i % 3)) , ITEM_WIDTH, ITEM_HEIGHT), "EMPTY"))
+							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 2)), ITEM_START_Y + (ITEM_HEIGHT * (i / 2)) , ITEM_WIDTH, ITEM_HEIGHT), "EMPTY"))
 							{
 								if(state == inventory_state.idle)
 								{

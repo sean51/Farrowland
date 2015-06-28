@@ -2,6 +2,7 @@
 public class Hero extends Attributes 
 {
 	private var backpack : Items[];
+	private var next_level : int;
 	
 	function Hero()
 	{
@@ -16,6 +17,9 @@ public class Hero extends Attributes
 		speed = 2;
 		magic_damage = 5;
 		gold = 0;
+		experience = 0;
+		next_level = 100;
+		level = 1;
 	}
 	
 	function Stat_Text() : String
@@ -27,6 +31,22 @@ public class Hero extends Attributes
 	function Full_Heal()
 	{
 		health = max_health;
+	}
+	
+	function Level_Up()
+	{
+		level++;
+		Messenger.Text("Level " + level + " reached. + 1 to all stats.");
+		damage++;
+		max_health++;
+		armor++;
+		speed++;
+		magic_damage++;
+		next_level = (next_level * 2);
+		if (experience > next_level)
+		{
+			Level_Up();
+		}
 	}
 	
 	function Get_Backpack() : Items[]
@@ -56,6 +76,15 @@ public class Hero extends Attributes
 	function Add_Gold(new_amount : int)
 	{
 		gold += new_amount;
+	}
+	
+	function Add_Experience(new_amount : int)
+	{
+		experience += new_amount;
+		if(experience > next_level)
+		{
+			Level_Up();
+		}
 	}
 	
 	function Remove_Gold(new_amount : int)
