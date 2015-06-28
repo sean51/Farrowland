@@ -1,7 +1,8 @@
 ﻿#pragma strict 
 public class Monster extends Attributes 
-{//asd
-
+{
+	var loot_number : int;
+	
 	function Monster()
 	{
 		equipped = new Items[6];
@@ -15,7 +16,8 @@ public class Monster extends Attributes
 	
 	function Monster(monster_name : String, monster_damage : int,
 	 					monster_health : int, monster_armor : int, 
-	 					monster_speed : int, monster_magic_damage : int){
+	 					monster_speed : int, monster_magic_damage : int,
+	 					monster_loot_number : int){
 	 					
 		equipped = new Items[6];
 		name = monster_name;
@@ -24,11 +26,17 @@ public class Monster extends Attributes
 		armor = monster_armor;
 		speed = monster_speed;
 		magic_damage = monster_magic_damage;
+		loot_number = monster_loot_number;
+	}
+	
+	function Get_Loot_Number() : int
+	{
+		return loot_number;
 	}
 	
 	function DealDamage() : int
 	{
-		return 0;
+		return damage;
 	}
 	// overrides  the set name in the Attributes script and sets the monsters name.
 	function setName(theType : int): String

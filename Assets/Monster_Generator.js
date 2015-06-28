@@ -2,7 +2,7 @@
 
 	function Generate() : Monster
 	{
-		var roll_1 : int = Random.Range(0, 9.999);
+		var roll_1 : int = Random.Range(0, 10);
 		var roll_2 : int = Random.Range(0, 2);
 		var roll_3 : int = Random.Range(1, 6);
 		
@@ -12,8 +12,9 @@
 		var armor : int = Calculate_Armor(roll_1, roll_2, roll_3);
 		var speed : int = Calculate_Speed(roll_1, roll_2, roll_3);
 		var magic_damage : int = Calculate_Magic_Damage(roll_1, roll_2, roll_3);
+		var loot_num : int = roll_1 * 100;
 		
-		var random_monster : Monster = new Monster(name, damage, health, armor, speed, magic_damage);
+		var random_monster : Monster = new Monster(name, damage, health, armor, speed, magic_damage, loot_num);
 		
 		return random_monster;
 	}
@@ -30,8 +31,9 @@
 		var armor : int = Calculate_Armor(roll_1, roll_2, roll_3);
 		var speed : int = Calculate_Speed(roll_1, roll_2, roll_3);
 		var magic_damage : int = Calculate_Magic_Damage(roll_1, roll_2, roll_3);
+		var loot_num : int = roll_1 * 100;
 		
-		var random_monster : Monster = new Monster(name, damage, health, armor, speed, magic_damage);
+		var random_monster : Monster = new Monster(name, damage, health, armor, speed, magic_damage, loot_num);
 		
 		return random_monster;
 	}
