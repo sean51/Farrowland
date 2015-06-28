@@ -66,7 +66,6 @@ public class Master extends MonoBehaviour
 		player_text.Set(player);
 		navigation = gameObject.AddComponent.<Navigation_GUI>();
 		shop = gameObject.AddComponent.<Shop_GUI>();
-		shop.Set(player);
 	}
 	
 	/*

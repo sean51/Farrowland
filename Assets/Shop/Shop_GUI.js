@@ -32,11 +32,6 @@
 		}
 	}
 	
-	function Set(the_player : Hero) 
-	{
-		player = the_player;
-	}
-	
 	function OnGUI() {
 		if(sell)
 		{
@@ -83,11 +78,11 @@
 		
 		if(purchasing) {
 			GUI.BeginGroup(new Rect(new Rect(Screen.width/2 - 500, Screen.height/3 - 100 , 200, 155)));
-			if(player.Get_Gold() >= curItem.Get_Price)
+			if(Inventory.Get_Gold() >= curItem.Get_Price())
 			{
 				GUI.Box(new Rect(0, 0, 200, 100), "Purchase: "+curItem.Get_Name()+"\nfor "+curItem.Get_Price()+" gold?");
 				if(GUI.Button(new Rect(10, 55, 75, 35), "Yes")){
-					Inventory.Add(curItem);	
+					Inventory.Add(curItem);
 					purchasing = false;
 				}
 				if(GUI.Button(new Rect(115, 55, 75, 35), "No")) {
@@ -96,7 +91,7 @@
 			} 
 			else 
 			{
-				GUI.Box(new Rect(0, 0, 200, 100), "You need "+curItem.Get_Price() - player.Get_Gold()+" more gold to purchase: "+curItem.Get_Name()+".");
+				GUI.Box(new Rect(0, 0, 200, 100), "You need "+(curItem.Get_Price() - Inventory.Get_Gold())+" more gold to purchase: "+curItem.Get_Name()+".");
 				if(GUI.Button(new Rect(50, 55, 75, 35), "OK")){
 					purchasing = false;
 				}
