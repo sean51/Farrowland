@@ -4,7 +4,7 @@ public class Area
 {
 	//ALL AREAS
 	private var my_texture_color : Color;
-	private var my_type : gui_type;
+	protected var my_type : gui_type;
 	private var dialog : String;
 	
 	//FIGHT AREAS
@@ -96,15 +96,15 @@ public class Area
 				{
 					if (i == 0)
 					{
-						dialog += current_enemies[i].name;
+						dialog += current_enemies[i].Get_Name();
 					}
 					else if (i == current_enemies.length - 1)
 					{
-						dialog += ", and a " + current_enemies[i].name;
+						dialog += ", and a " + current_enemies[i].Get_Name();
 					}
 					else
 					{
-						dialog += ", " + current_enemies[i].name;
+						dialog += ", " + current_enemies[i].Get_Name();
 					}
 				}
 				dialog += " get ready for battle.";
@@ -178,13 +178,13 @@ public class Area
 				{
 					dialog = "You see the corpses of\n"; 
 					for(var m : Monster in current_enemies){
-					 	dialog += m.name + ", ";
+					 	dialog += m.Get_Name() + ", ";
 				 	}
 				}
 				else
 				{
 					dialog = "You see the corpse of\n"; 
-					dialog += current_enemies[0].name+", ";
+					dialog += current_enemies[0].Get_Name()+", ";
 				}
 				dialog += "\nmaybe you can find loot if we ever program that.\nI'm Joe\nI like newline\ncharacters.";
 			my_type = gui_type.nav;

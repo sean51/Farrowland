@@ -6,6 +6,7 @@ public class Inventory_GUI extends MonoBehaviour
 {
 	private var state : inventory_state = inventory_state.idle;
 	private var clicked : int = 0;
+	private var owner : Hero;
 	private var backpack : Items[];
 	private var equipped : Items[];
 	private var spells : Items[];
@@ -41,11 +42,12 @@ public class Inventory_GUI extends MonoBehaviour
 	private static var TOGGLE_START_Y: float = Screen.height/1.5;
 	private static var TOGGLE_START_X: float = Screen.width/15;
 	
-	function Populate(new_pack : Items[], new_equip : Items[], new_spells : Items[])
+	function Populate(new_owner : Hero)
 	{
-		backpack = new_pack;
-		equipped = new_equip;
-		spells = new_spells;
+		backpack = new_owner.Get_Backpack();
+		equipped = new_owner.Get_Equipped();
+		spells = new_owner.Get_Spells();
+		owner = new_owner;
 	}
 	
 	function Start () 
@@ -138,6 +140,11 @@ public class Inventory_GUI extends MonoBehaviour
 	function Get_Backpack() : Items[]
 	{
 		return backpack;
+	}
+	
+	function Get_Owner() : Hero
+	{
+		return owner;
 	}
 	
 	function OnGUI ()
@@ -304,7 +311,7 @@ public static class Inventory
 {
 	var relay : Inventory_GUI;
 	
-	public function Set(linked_object : Inventory_GUI)
+	public function Set (linked_object : Inventory_GUI)
 	{
 		relay = linked_object;
 	}
@@ -324,8 +331,23 @@ public static class Inventory
 		relay.Add_Spell(new_item);
 	}
 	
-	public function Get_Backpack() : Items[]
+	public function Get_Backpack () : Items[]
 	{
-		relay.Get_Backpack();
+		return relay.Get_Backpack();
+	}
+	
+	public function Add_Gold (new_gold : int)
+	{
+		relay.Get_Owner().Add_Gold(new_gold);
+	}
+	
+	public function Remove_Gold (old_gold : int)
+	{
+		relay.Get_Owner().Remove_Gold(old_gold);
+	}
+	
+	public function Get_Gold() : int
+	{
+		return relay.Get_Owner().Get_Gold();
 	}
 }

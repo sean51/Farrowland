@@ -45,7 +45,8 @@ public class Master extends MonoBehaviour
 		Start_GUI();
 		Create_Zone(zone.town, 3);
 		//Give the player a random weapon
-		Inventory.Add(Weapon_Generator.Generate());
+		var aa : Items = Weapon_Generator.Generate();
+		Inventory.Add(aa);
 		Inventory.Add_Spell(new Spell(spell_type.fireball));
 		New_Area();
 		
@@ -59,7 +60,7 @@ public class Master extends MonoBehaviour
 		fight = gameObject.AddComponent.<Battle_GUI>();
 		travel = gameObject.AddComponent.<Travel_GUI>();
 		inventory = gameObject.AddComponent.<Inventory_GUI>();
-		inventory.Populate(player.Get_Backpack(), player.Get_Equipped(), player.Get_Spells());
+		inventory.Populate(player);
 		Inventory.Set(inventory);
 		player_text = gameObject.AddComponent.<Player_GUI>();
 		player_text.Set(player);
@@ -97,14 +98,6 @@ public class Master extends MonoBehaviour
 				Create_Zone(current_zone[position[0],position[1]].Get_Location(), current_zone[position[0],position[1]].Get_Location_Size());
 				New_Area();
 			}
-		}
-		if (false /*current_type == gui_type.shop*/)
-		{
-			
-		}
-		if (false /*current_type == gui_type.quest*/)
-		{
-			
 		}
 	}
 
@@ -178,6 +171,10 @@ public class Master extends MonoBehaviour
 						if (i == position[0] && j == position[1])
 						{
 							current_zone[i,j] = new Area(gui_type.travel, "Portal.", zone.town, 3);
+						}
+						else if (i == exit_position[0] && j == exit_position[1])
+						{
+							current_zone[i,j] = new Area(gui_type.travel, "You have won the game!", zone.town, 3);
 						}
 						else
 						{

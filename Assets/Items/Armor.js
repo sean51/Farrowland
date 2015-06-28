@@ -33,4 +33,9 @@
 	{
 		return damage;
 	}
+	
+	function Get_Armor() : int
+	{
+		return defense;
+	}
 }

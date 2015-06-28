@@ -74,7 +74,7 @@ public class Battle_GUI extends MonoBehaviour
 			var swapped : boolean  = false;
 			for (var j = 0; j < people_fighting.Length - 1; j++)
 			{
-				if(people_fighting[j + 1].speed > people_fighting[j].speed) 
+				if (people_fighting[j + 1].Get_Speed() > people_fighting[j].Get_Speed()) 
 				{
 					var placeHolder : Attributes = people_fighting[j];
 					people_fighting[j] = people_fighting[j + 1];
@@ -404,10 +404,10 @@ public class Battle_GUI extends MonoBehaviour
 					target = heroes[0];
 					for(var att : Attributes in heroes) 
 					{
-						if(target.health > att.health) target = att;
+						if(target.Get_Health() > att.Get_Health()) target = att;
 					}
 				}
-				(target as Monster).Take_Damage(-current_hero.magic_damage);
+				(target as Monster).Take_Damage(-current_hero.Get_Magic_Damage());
 				Turn_Finished();
 				state = battle_state.idle;
 				spell = false;
@@ -418,10 +418,10 @@ public class Battle_GUI extends MonoBehaviour
 				if(target == null){
 					target = enemies[0];
 					for(var att : Attributes in enemies) {
-						if(target.health < att.health) target = att;
+						if(target.Get_Health() < att.Get_Health()) target = att;
 					}
 				}
-				(target as Monster).Take_Damage(current_hero.magic_damage);
+				(target as Monster).Take_Damage(current_hero.Get_Magic_Damage());
 				Turn_Finished();
 				state = battle_state.idle;
 				spell = false;
@@ -432,10 +432,10 @@ public class Battle_GUI extends MonoBehaviour
 				if(target == null){
 					target = enemies[0];
 					for(var att : Attributes in enemies) {
-						if(target.health < att.health) target = att;
+						if(target.Get_Health() < att.Get_Health()) target = att;
 					}
 				}
-				(target as Monster).Take_Damage(current_hero.magic_damage);
+				(target as Monster).Take_Damage(current_hero.Get_Magic_Damage());
 				Turn_Finished();
 				state = battle_state.idle;
 				spell = false;
@@ -446,10 +446,10 @@ public class Battle_GUI extends MonoBehaviour
 				if(target == null){
 					target = enemies[0];
 					for(var att : Attributes in enemies) {
-						if(target.health < att.health) target = att;
+						if(target.Get_Health() < att.Get_Health()) target = att;
 					}
 				}
-				(target as Monster).Take_Damage(current_hero.magic_damage);
+				(target as Monster).Take_Damage(current_hero.Get_Magic_Damage());
 				Turn_Finished();
 				state = battle_state.idle;
 				spell = false;

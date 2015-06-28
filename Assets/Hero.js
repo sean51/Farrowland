@@ -1,7 +1,6 @@
 ﻿#pragma strict 
 public class Hero extends Attributes 
 {
-	var hero_type : int = 0; // used to figure out your stats after choosing the type of character you wish to play as.
 	private var backpack : Items[];
 	
 	function Hero()
@@ -16,12 +15,13 @@ public class Hero extends Attributes
 		armor = 5;
 		speed = 2;
 		magic_damage = 5;
+		gold = 0;
 	}
 	
 	function Stat_Text() : String
 	{
 		var spacing : String = "     ";
-		return "Name: " + name + spacing + "Health: " + health + "/" + max_health + spacing + "Damage: " + Get_Damage() + spacing + "Magic: " + magic_damage + spacing + "Armor: " + armor + spacing + "Speed: " + speed;
+		return "Name: " + name + spacing + "Health: " + health + "/" + max_health + spacing + "Damage: " + Get_Damage() + spacing + "Magic: " + magic_damage + spacing + "Armor: " + armor + spacing + "Speed: " + speed + spacing + "Gold: " + gold;
 	}
 	
 	function Get_Backpack() : Items[]
@@ -34,6 +34,7 @@ public class Hero extends Attributes
 		return equipped;
 	}
 	
+	/*
 	function Add_Item(new_item : Items)
 	{
 		for (var i : int = 0; i < backpack.length; i++)
@@ -45,9 +46,19 @@ public class Hero extends Attributes
 			}
 		}
 	}
-
-	function DealDamage() 
-	{ 
-		return 0;
+	*/
+	
+	function Add_Gold(new_amount : int)
+	{
+		gold += new_amount;
+	}
+	
+	function Remove_Gold(new_amount : int)
+	{
+		gold -= new_amount;
+		if (gold < 0)
+		{
+			gold = 0;
+		}
 	}
 }

@@ -1,58 +1,72 @@
 ﻿#pragma strict
-public class Attributes {
-//asd
+public class Attributes 
+{
 	///Item Info Start
 	protected var equipped : Items[];
 	protected var spells : Items[];
-	///Item Info End
 	
 	/// Attributes Start
-	var name : String;
-	var max_health : int;
-	var health : int;
-	var armor : int;
-	var speed : int;
-	var damage : int;
-	var magic_damage : int;
-	/// Attributes End
-	
-	///STATUS EFFECTS START
+	protected var name : String;
+	protected var max_health : int;
+	protected var health : int;
+	protected var armor : int;
+	protected var speed : int;
+	protected var damage : int;
+	protected var magic_damage : int;
+	protected var gold : int;
 	protected var is_alive : boolean;
-	var is_burned : boolean = false;
-	var is_poisoned : boolean = false;
-	var is_slow : boolean = false;
-	var is_healing : boolean= false;
-	var is_fast : boolean= false;
-	var is_cleansed: boolean= false;
-	var statis : boolean[] = [ is_burned, is_poisoned, is_slow, is_healing, is_fast, is_cleansed]; // add more statis effects HERE!!!//also need to make setmethods and getters
-	///STATUS EFFECTS END
 	
-	
-	/*MODIFICATIONS*/
 	function Get_Tooltip() : String 
 	{
-		return "Health: "+health+
-				"\nDamage: "+damage+
-				"\nArmor: "+armor+
-				"\nSpeed: "+speed+
-				"\nMagic: "+magic_damage;
+		return "Health: " + health +
+				"\nDamage: " + damage +
+				"\nArmor: " + armor +
+				"\nSpeed: " + speed +
+				"\nMagic: " + magic_damage;
 	}
 	
-	
-	/*MODIFICATIONS*/
 	function Attributes()
 	{
 		is_alive = true;
 	}
 	
-	function Get_Name()
+	function Get_Name() : String
 	{
 		return name;
 	}
 	
-	function Take_Damage (theDamageTaken : int)
+	function Get_Speed() : int
+	{
+		return speed;
+	}
+	
+	function Get_Health() : int
+	{
+		return health;
+	}
+	
+	function Get_Magic_Damage() : int
+	{
+		return magic_damage;
+	}
+	
+	function Get_Gold() : int
+	{
+		return gold;
+	}
+	
+	function Take_Damage (the_damage_taken : int)
 	{ 
-		health -= theDamageTaken;
+		var modified_damage : int = the_damage_taken;
+		if (equipped[4] != null)
+		{
+			modified_damage -= (equipped[4] as Armor).Get_Armor();
+		}
+		if (modified_damage < 0)
+		{
+			modified_damage = 0;
+		}
+		health -= modified_damage;
 		if(health <= 0)
 		{
 			is_alive = false;
@@ -66,8 +80,7 @@ public class Attributes {
 	
 	function Get_Damage(): int 
 	{
-		//return damage;
-		if(equipped[0] != null)
+		if (equipped[2] != null)
 		{
 			return (equipped[0] as Weapon).Get_Damage() + damage;
 		}
