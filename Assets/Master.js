@@ -46,6 +46,7 @@ public class Master extends MonoBehaviour
 		Create_Zone(zone.town, 3);
 		//Give the player a random weapon
 		Inventory.Add(Weapon_Generator.Generate());
+		Inventory.Add_Spell(new Spell(spell_type.fireball));
 		New_Area();
 		
 	}
@@ -58,7 +59,7 @@ public class Master extends MonoBehaviour
 		fight = gameObject.AddComponent.<Battle_GUI>();
 		travel = gameObject.AddComponent.<Travel_GUI>();
 		inventory = gameObject.AddComponent.<Inventory_GUI>();
-		inventory.Populate(player.Get_Backpack(), player.Get_Equipped());
+		inventory.Populate(player.Get_Backpack(), player.Get_Equipped(), player.Get_Spells());
 		Inventory.Set(inventory);
 		player_text = gameObject.AddComponent.<Player_GUI>();
 		player_text.Set(player);

@@ -6,7 +6,8 @@ public class Hero extends Attributes
 	
 	function Hero()
 	{
-		backpack = new Items[18];
+		spells = new Items[6];
+		backpack = new Items[12];
 		equipped = new Items[6];
 		name = "Hero";
 		damage = 200;
@@ -43,43 +44,6 @@ public class Hero extends Attributes
 				break;
 			}
 		}
-	}
-	
-	function setType(theType : int)
-	{
-		if(hero_type == 1)//Warrior
-		{
-			setName(theType);
-			Set_Max_Health(90);
-			setHealth(90);
-			setSpeed(2);
-			setArmor(7);
-			setDamage(7);
-			setMagicDamage(2);
-			setAlive(true);
-		}
-		else if(hero_type == 2)//Ranger
-		{
-			setName(theType);
-			Set_Max_Health(90);
-			setHealth(80);
-			setSpeed(5);
-			setArmor(5);
-			setDamage(10);
-			setMagicDamage(2);
-			setAlive(true);
-		}
-		else if(hero_type == 3)//Mage
-		{
-			setName(theType);
-			Set_Max_Health(90);
-			setHealth(70);
-			setSpeed(2);
-			setArmor(5);
-			setDamage(5);
-			setMagicDamage(10);
-			setAlive(true);
-		} 
 	}
 
 	function DealDamage() 

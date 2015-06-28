@@ -8,6 +8,7 @@ public class Inventory_GUI extends MonoBehaviour
 	private var clicked : int = 0;
 	private var backpack : Items[];
 	private var equipped : Items[];
+	private var spells : Items[];
 	private var button_text : String = "INVENTORY";
 	
 	private static var INVENTORY_HEIGHT: float = Screen.height/3.5;
@@ -40,10 +41,11 @@ public class Inventory_GUI extends MonoBehaviour
 	private static var TOGGLE_START_Y: float = Screen.height/1.5;
 	private static var TOGGLE_START_X: float = Screen.width/15;
 	
-	function Populate(new_pack : Items[], new_equip : Items[])
+	function Populate(new_pack : Items[], new_equip : Items[], new_spells : Items[])
 	{
 		backpack = new_pack;
 		equipped = new_equip;
+		spells = new_spells;
 	}
 	
 	function Start () 
@@ -70,6 +72,22 @@ public class Inventory_GUI extends MonoBehaviour
 		}
 		backpack[item_1] = second_item;
 		backpack[item_2] = first_item;
+	}
+	
+	function Move_Spell(item_1 : int, item_2 : int)
+	{
+		var first_item : Items;
+		var second_item : Items;
+		if(spells[item_1] != null)
+		{
+			first_item = spells[item_1];
+		}
+		if(spells[item_2] != null)
+		{
+			second_item = spells[item_2];
+		}
+		spells[item_1] = second_item;
+		spells[item_2] = first_item;
 	}
 	
 	function Equip_Item(new_item : int, old_item : int)
@@ -100,6 +118,18 @@ public class Inventory_GUI extends MonoBehaviour
 		}
 	}
 	
+	function Add_Spell(new_item : Items)
+	{
+		for (var i : int = 0; i < spells.length; i++)
+		{
+			if (spells[i] == null)
+			{
+				spells[i] = new_item;
+				break;
+			}
+		}
+	}
+	
 	function OnGUI ()
 	{
 		if(GUI.Button (new Rect (TOGGLE_START_X, TOGGLE_START_Y, TOGGLE_WIDTH, TOGGLE_HEIGHT), button_text))
@@ -125,7 +155,7 @@ public class Inventory_GUI extends MonoBehaviour
 					{
 						if(equipped[i] != null)
 						{
-							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 2)), ITEM_START_Y + (ITEM_HEIGHT * (i % 3)) , ITEM_WIDTH, ITEM_HEIGHT), new GUIContent("ITEM", equipped[i].tooltip)))
+							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 2)), ITEM_START_Y + (ITEM_HEIGHT * (i % 3)) , ITEM_WIDTH, ITEM_HEIGHT), new GUIContent("ITEM", equipped[i].Get_Tooltip())))
 							{
 								if(state == inventory_state.idle)
 								{
@@ -167,11 +197,46 @@ public class Inventory_GUI extends MonoBehaviour
 				GUI.EndGroup();
 				GUI.BeginGroup(new Rect(BACKPACK_START_X, BACKPACK_START_Y, BACKPACK_WIDTH, BACKPACK_HEIGHT));
 					GUI.Box(new Rect(0, 0, BACKPACK_WIDTH, BACKPACK_HEIGHT), "BACKPACK");
-					for(i = 0; i < 18; i++)
+					for(i = 0; i < 6; i++)
+					{
+						if(spells[i] != null)
+						{
+							if (GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * i), ITEM_START_Y, ITEM_WIDTH, ITEM_HEIGHT), new GUIContent("SPELL", spells[i].Get_Tooltip())))
+							{
+								if (state == inventory_state.idle)
+								{
+									clicked = i;
+									state = inventory_state.clicked_spell;
+								}
+								else if (state == inventory_state.clicked_spell)
+								{
+									Move_Spell(clicked, i);
+									state = inventory_state.idle;
+								}
+							}
+						}
+						else
+						{
+							if (GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * i), ITEM_START_Y, ITEM_WIDTH, ITEM_HEIGHT), "EMPTY"))
+							{
+								if (state == inventory_state.idle)
+								{
+									clicked = i;
+									state = inventory_state.clicked_spell;
+								}
+								else if (state == inventory_state.clicked_spell)
+								{
+									Move_Spell(clicked, i);
+									state = inventory_state.idle;
+								}
+							}
+						}
+					}
+					for(i = 0; i < 12; i++)
 					{
 						if(backpack[i] != null)
 						{
-							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 6)), ITEM_START_Y + (ITEM_HEIGHT * (i / 6)), ITEM_WIDTH, ITEM_HEIGHT), new GUIContent("ITEM", backpack[i].tooltip)))
+							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 6)), ITEM_START_Y + ITEM_HEIGHT + (ITEM_HEIGHT * (i / 6)), ITEM_WIDTH, ITEM_HEIGHT), new GUIContent("ITEM", backpack[i].Get_Tooltip())))
 							{
 								if(state == inventory_state.idle)
 								{
@@ -192,7 +257,7 @@ public class Inventory_GUI extends MonoBehaviour
 						}
 						else
 						{
-							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 6)), ITEM_START_Y + (ITEM_HEIGHT * (i / 6)) , ITEM_WIDTH, ITEM_HEIGHT), "EMPTY"))
+							if(GUI.Button (new Rect (ITEM_START_X + (ITEM_WIDTH * (i % 6)), ITEM_START_Y + ITEM_HEIGHT + (ITEM_HEIGHT * (i / 6)) , ITEM_WIDTH, ITEM_HEIGHT), "EMPTY"))
 							{
 								if(state == inventory_state.idle)
 								{
@@ -237,5 +302,10 @@ public static class Inventory
 	public function Add (new_item : Items)
 	{
 		relay.Add_Item(new_item);
+	}
+	
+	public function Add_Spell (new_item : Items)
+	{
+		relay.Add_Spell(new_item);
 	}
 }
