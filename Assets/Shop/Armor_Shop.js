@@ -11,6 +11,6 @@ public class Armor_Shop extends Area {
 		for (var i = 0; i < items.Length; i++) {
 			items[i] = Armor_Generator.Generate();
 		}
-		shop.Populate(items);
+		shop.Populate(items, "Armor");
 	}
 }	

@@ -1,6 +1,6 @@
-﻿public class Potion_Shop extends Area {
+public class Magic_Shop extends Area {
 	var shop : Shop_GUI;
-	function Potion_Shop (current_shop : Shop_GUI) {
+	function Magic_Shop (current_shop : Shop_GUI) {
 		my_type = gui_type.shop;
 		shop = current_shop;
 	}
@@ -10,8 +10,9 @@
 		
 		var items : Items[] = new Items[12];
 		for (var i = 0; i < items.Length; i++) {
-			items[i] = Weapon_Generator.Generate();
+			items[i] = new Magic();
+			items[i].Create_Random();
 		}
-		shop.Populate(items);
+		shop.Populate(items, "Magic");
 	}
-}	
+}
