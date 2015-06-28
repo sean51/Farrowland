@@ -4,6 +4,7 @@ import System.Collections.Generic;
 
 public class Master extends MonoBehaviour
 {
+	//TILE OBJECTS
 	public var up : GameObject;
 	public var down : GameObject;
 	public var left : GameObject;
@@ -13,6 +14,7 @@ public class Master extends MonoBehaviour
 	public var dr : GameObject;
 	public var dl : GameObject;
 	
+	//GUI COMPONENTS TO ATTACH
 	private var option: Option_GUI;
 	private var navigation: Navigation_GUI;
 	private var fight : Battle_GUI;
@@ -27,9 +29,11 @@ public class Master extends MonoBehaviour
 	private var magic_shop : Magic_Shop_GUI;
 	private var costco : Costco_Shop_GUI;
 
+	//ZONE VARIABLES
 	private var current_zone: Area[,];
 	private var zone_size : int = 10;
 	private var position: int[];
+	private var exit_position : int[];
 	private var map : String = "";
 
 	private var current_type: gui_type;
@@ -83,14 +87,14 @@ public class Master extends MonoBehaviour
 	 */
 	function Update () 
 	{
-		if(navigation.enabled == true)
+		if (navigation.enabled == true)
 		{
 			if(navigation.Get_Choice() != direction.undecided)
 			{
 				Move(navigation.Get_Choice());
 			}
 		}
-		else if(current_type == gui_type.fight)
+		else if (current_type == gui_type.fight)
 		{
 			if(fight.Get_State() == battle_state.done)
 			{
@@ -98,7 +102,7 @@ public class Master extends MonoBehaviour
 				Set_GUI(gui_type.nav);
 			}
 		}
-		if(current_type == gui_type.travel)
+		if (current_type == gui_type.travel)
 		{
 			if(travel.Get_Enter())
 			{
@@ -107,6 +111,14 @@ public class Master extends MonoBehaviour
 				Create_Zone(current_zone[position[0],position[1]].Get_Location(), current_zone[position[0],position[1]].Get_Location_Size());
 				New_Area();
 			}
+		}
+		if (false /*current_type == gui_type.shop*/)
+		{
+			
+		}
+		if (false /*current_type == gui_type.quest*/)
+		{
+			
 		}
 	}
 
@@ -135,24 +147,40 @@ public class Master extends MonoBehaviour
 	{
 		zone_size = new_zone_size;
 		current_zone = new Area[zone_size, zone_size];
+		var wall_matrix : Node[,];
 		switch(zone_type)
 		{
 			case zone.dungeon:
+				var position_options : List.<int[]> = new List.<int[]>();
+				position_options.Add([zone_size - 1, zone_size - 1]);
+				position_options.Add([zone_size - 1, 0]);
+				position_options.Add([0, zone_size - 1]);
+				position_options.Add([0,0]);
+				switch (Random.Range(0, 4))
+				{
+					case 0: position = position_options[0];
+						break;
+					case 1: position = position_options[1];
+						break;
+					case 2: position = position_options[2];
+						break;
+					case 3: position = position_options[3];
+						break;
+				}
+				position_options.Remove(position);
 				switch (Random.Range(0, 3))
 				{
-					case 0: position = [zone_size - 1, zone_size - 1];
+					case 0: exit_position = position_options[0];
 						break;
-					case 1: position = [zone_size - 1, 0];
+					case 1: exit_position = position_options[1];
 						break;
-					case 2: position = [0, zone_size - 1];
-						break;
-					case 3: position = [0,0];
+					case 2: exit_position = position_options[2];
 						break;
 				}
 				//DELETE
-				position = [zone_size - 1, zone_size - 1];
+				//position = [zone_size - 1, zone_size - 1];
 				//CREATE WALLS AKA WTF
-				var wall_matrix : Node[,] = Create_Walls([0, 0]);
+				wall_matrix = Create_Walls(exit_position);
 				map = Get_Map(wall_matrix);
 				//DELETE
 				//DELETE_THIS_TOO = wall_matrix;
@@ -175,6 +203,10 @@ public class Master extends MonoBehaviour
 				break;
 			case zone.town:
 				position = [zone_size / 2, zone_size / 2];
+				wall_matrix = Create_Walls();
+				map = Get_Map(wall_matrix);
+				//DELETE
+				//DELETE_THIS_TOO = wall_matrix;
 				for(var k: int = 0; k < zone_size; k++)
 				{
 					for(var l: int = 0; l < zone_size; l++)
@@ -187,14 +219,60 @@ public class Master extends MonoBehaviour
 						{
 							current_zone[k,l] = new Area(gui_type.travel, "Portal.", zone.dungeon, 5);
 						}
+						else if (k == position[0] && l == position[1] + 1)
+						{
+							current_zone[k,l] = new Quest(new Package());
+						}
+						else if (k == position[0] - 1 && l == position[1] + 1)
+						{
+							current_zone[k,l] = new Quest(new Package());
+						}
+						else if (k == position[0] - 1 && l == position[1])
+						{
+							current_zone[k, l] = new Weapon_Shop();
+						}
+						else if (k == position[0] - 1 && l == position[1] - 1)
+						{
+							current_zone[k, l] = new Armor_Shop();
+						}
+						else if (k == position[0] && l == position[1] - 1)
+						{
+							current_zone[k, l] = new Costco_Shop();
+						}
+						else if (k == position[0] + 1 && l == position[1] - 1)
+						{
+							current_zone[k, l] = new Potion_Shop();
+						}
+						else if (k == position[0] + 1 && l == position[1] + 1)
+						{
+							current_zone[k, l] = new Magic_Shop();
+						}
 						else
 						{
 							current_zone[k,l] = new Area(1);
 						}
+						current_zone[k, l].Set_Walls(wall_matrix[k, l].Get_Walls());
 					}
 				}
 				break;
 		}
+	}
+	
+	function Create_Walls() : Node[,]
+	{
+		var wall_matrix : Node[,] = new Node[zone_size, zone_size];
+		for(var i : int = 0; i < zone_size; i++)
+		{
+			for(var j : int = 0; j < zone_size; j++)
+			{
+				wall_matrix[i, j] = new Node();
+				wall_matrix[i, j].ceiling = (i == zone_size - 1);
+				wall_matrix[i, j].floor = (i == 0);
+				wall_matrix[i, j].left_wall = (j == 0);
+				wall_matrix[i, j].right_wall = (j == zone_size - 1);
+			}
+		}
+		return wall_matrix;
 	}
 	
 	function Create_Walls(exit : int[]) : Node[,]
@@ -317,6 +395,7 @@ public class Master extends MonoBehaviour
 		//DELETE THIS SHIT
 		//if(DELETE_THIS_TOO != null)
 		//DELETE_THIS.Set_Printing(Get_Map(DELETE_THIS_TOO));
+		
 		Recolor();
 		current_zone[position[0], position[1]].Begin();
 		navigation.Set_Options(current_zone[position[0], position[1]].Get_Movement());
