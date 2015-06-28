@@ -4,14 +4,14 @@
 	{
 		var roll_1 : int = Random.Range(0, 10);
 		var roll_2 : int = Random.Range(0, 3);
-		var roll_3 : int = Random.Range(1, 3);
+		var roll_3 : int = Random.Range(0, 3);
 		
 		var name : String = Prefix(roll_1) + Monster_Type(roll_1, roll_2, roll_3);
 		var loot_num : int = (roll_1 * 70) + (roll_3 * 500);
 		var my_type : monster_type = Calculate_Monster_Spec(roll_1, roll_2);
 		
 		var random_monster : Monster = new Monster(name, loot_num, my_type);
-		Buff_Stats(random_monster, roll_1, roll_2, roll_3);	
+		Buff_Stats(random_monster, roll_1, my_type, roll_3);	
 		
 		return random_monster;
 	}
@@ -19,9 +19,9 @@
 	function Generate(seed : int) : Monster
 	{
 		var percentage : float = seed / 100;
-		roll_1 = Random.Range(0, Mathf.RoundToInt((10 * percentage)));
+		roll_1 = Random.Range(0, Mathf.Ceil(10 * percentage));
 		roll_2 = Random.Range(0, 3);
-		roll_3 = Random.Range(0, Mathf.RoundToInt((3 * percentage)));
+		roll_3 = Random.Range(0, Mathf.Ceil(3 * percentage));
 		Debug.Log(roll_1+ ", "+roll_3);
 		
 		var name : String = Prefix(roll_1) + Monster_Type(roll_1, roll_2, roll_3);
@@ -41,14 +41,14 @@
 		{
 			case monster_type.fighter:
 				monster.Set_Damage((power * 3) + 2 + (quality * 5));
-				monster.Set_Health((power + 1) * 8 + (quality * 1));
+				monster.Set_Health((power * 6) + 10 + (quality*2));
 				monster.Set_Armor(power/2 + (quality * 2));
-				monster.Set_Speed(power/5 + (quality));
+				monster.Set_Speed(power/5 + quality);
 				monster.Set_Magic_Damage(0);
 				break;
 			case monster_type.wizard: 
 				monster.Set_Damage(0);
-				monster.Set_Health((power + 1) * 5 + (quality * 1));
+				monster.Set_Health((power + 1) * 5 + quality);
 				monster.Set_Armor(power/5 + (quality / 6));
 				monster.Set_Speed(power/5 + quality);
 				monster.Set_Magic_Damage((power * 4) + 2 + (quality * 7));
@@ -113,6 +113,7 @@
 		{
 			type = monster_type.fighter;
 		} 
+		return type;
 	}
 
 	private function Monster_Type(prefix_roll : int, type_roll : int, quality_roll : int) : String
