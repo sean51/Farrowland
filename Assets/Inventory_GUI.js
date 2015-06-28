@@ -118,6 +118,11 @@ public class Inventory_GUI extends MonoBehaviour
 		}
 	}
 	
+	function Remove_Item (old_item : Items)
+	{
+		backpack[ArrayUtility.IndexOf(backpack, old_item)] = null;
+	}
+	
 	function Add_Spell(new_item : Items)
 	{
 		for (var i : int = 0; i < spells.length; i++)
@@ -128,6 +133,11 @@ public class Inventory_GUI extends MonoBehaviour
 				break;
 			}
 		}
+	}
+	
+	function Get_Backpack() : Items[]
+	{
+		return backpack;
 	}
 	
 	function OnGUI ()
@@ -304,8 +314,18 @@ public static class Inventory
 		relay.Add_Item(new_item);
 	}
 	
+	public function Remove (old_item : Items)
+	{
+		relay.Remove_Item(old_item);
+	}
+	
 	public function Add_Spell (new_item : Items)
 	{
 		relay.Add_Spell(new_item);
+	}
+	
+	public function Get_Backpack() : Items[]
+	{
+		relay.Get_Backpack();
 	}
 }
