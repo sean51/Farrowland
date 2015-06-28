@@ -3,133 +3,141 @@
 	function Generate() : Monster
 	{
 		var roll_1 : int = Random.Range(0, 10);
-		var roll_2 : int = Random.Range(0, 2);
-		var roll_3 : int = Random.Range(1, 6);
+		var roll_2 : int = Random.Range(0, 3);
+		var roll_3 : int = Random.Range(1, 3);
 		
-		var name : String = Prefix(roll_1) + Monster_Type(roll_2, roll_3);
-		var damage : int = Calculate_Damage(roll_1, roll_2, roll_3);
-		var health : int = Calculate_Health(roll_1, roll_2, roll_3);
-		var armor : int = Calculate_Armor(roll_1, roll_2, roll_3);
-		var speed : int = Calculate_Speed(roll_1, roll_2, roll_3);
-		var magic_damage : int = Calculate_Magic_Damage(roll_1, roll_2, roll_3);
-		var loot_num : int = roll_1 * 100;
+		var name : String = Prefix(roll_1) + Monster_Type(roll_1, roll_2, roll_3);
+		var loot_num : int = (roll_1 * 70) + (roll_3 * 500);
+		var my_type : monster_type = Calculate_Monster_Spec(roll_1, roll_2);
 		
-		var random_monster : Monster = new Monster(name, damage, health, armor, speed, magic_damage, loot_num);
+		var random_monster : Monster = new Monster(name, loot_num, my_type);
+		Buff_Stats(random_monster, roll_1, roll_2, roll_3);	
 		
 		return random_monster;
 	}
 	
-	function Generate_Specific(prefix_num : int, type_num : int, quality_num : int) : Monster
+	function Generate(seed : int) : Monster
 	{
-		var roll_1 : int = prefix_num;
-		var roll_2 : int = type_num;
-		var roll_3 : int = quality_num;
+		var percentage : float = seed / 100;
+		roll_1 = Random.Range(0, Mathf.RoundToInt((10 * percentage)));
+		roll_2 = Random.Range(0, 3);
+		roll_3 = Random.Range(0, Mathf.RoundToInt((3 * percentage)));
+		Debug.Log(roll_1+ ", "+roll_3);
 		
-		var name : String = Prefix(roll_1) + Monster_Type(roll_2, roll_3);
-		var damage : int = Calculate_Damage(roll_1, roll_2, roll_3);
-		var health : int = Calculate_Health(roll_1, roll_2, roll_3);
-		var armor : int = Calculate_Armor(roll_1, roll_2, roll_3);
-		var speed : int = Calculate_Speed(roll_1, roll_2, roll_3);
-		var magic_damage : int = Calculate_Magic_Damage(roll_1, roll_2, roll_3);
-		var loot_num : int = roll_1 * 100;
+		var name : String = Prefix(roll_1) + Monster_Type(roll_1, roll_2, roll_3);
+		var loot_num : int = (roll_1 * 70) + (roll_3 * 100);
+		var my_type : monster_type = Calculate_Monster_Spec(roll_1, roll_2);
 		
-		var random_monster : Monster = new Monster(name, damage, health, armor, speed, magic_damage, loot_num);
+		var random_monster : Monster = new Monster(name, loot_num, my_type);
+		
+		Buff_Stats(random_monster, roll_1, my_type, roll_3);		
 		
 		return random_monster;
 	}
-		
-	private function Calculate_Damage(prefix_roll : int, type_roll : int, quality_roll : int) : int
+	
+	private function Buff_Stats(monster : Monster, power : int,  spec : monster_type, quality : int)
 	{
-		var damage_calc : int = (quality_roll / 2) * (prefix_roll * (prefix_roll*.3)) + 1;
-		switch(type_roll)
+		switch(spec)
 		{
-			case 0:
+			case monster_type.fighter:
+				monster.Set_Damage((power * 3) + 2 + (quality * 5));
+				monster.Set_Health((power + 1) * 8 + (quality * 1));
+				monster.Set_Armor(power/2 + (quality * 2));
+				monster.Set_Speed(power/5 + (quality));
+				monster.Set_Magic_Damage(0);
 				break;
-			case 1: damage_calc /= .8;
+			case monster_type.wizard: 
+				monster.Set_Damage(0);
+				monster.Set_Health((power + 1) * 5 + (quality * 1));
+				monster.Set_Armor(power/5 + (quality / 6));
+				monster.Set_Speed(power/5 + quality);
+				monster.Set_Magic_Damage((power * 4) + 2 + (quality * 7));
 				break;
-			case 2: damage_calc /= .9;
+			case monster_type.ranger: 
+				monster.Set_Damage((power * 4) + 2 + (quality * 7));
+				monster.Set_Health((power + 1) * 5 + (quality * 1));
+				monster.Set_Armor(power/5 + (quality / 6));
+				monster.Set_Speed(power + quality);
+				monster.Set_Magic_Damage((power + 1) + (quality * 2));
+				break;
+			case monster_type.summoner: 
+				monster.Set_Damage(0);
+				monster.Set_Health((power + 1) * 5 + (quality * 1));
+				monster.Set_Armor(power/5 + (quality / 6));
+				monster.Set_Speed(power/5 + quality);
+				monster.Set_Magic_Damage((power * 4) + 2 + (quality * 7));
 				break;
 		}
-		return damage_calc;
 	}
 	
-	private function Calculate_Health(prefix_roll : int, type_roll : int, quality_roll : int) : int
+//	function Generate_Specific(prefix_num : int, type_num : int, quality_num : int) : Monster
+//	{
+//		var roll_1 : int = prefix_num;
+//		var roll_2 : int = type_num;
+//		var roll_3 : int = quality_num;
+//		
+//		var name : String = Prefix(roll_1) + Monster_Type(roll_2, roll_3);
+//		var damage : int = Calculate_Damage(roll_1, roll_2, roll_3);
+//		var health : int = Calculate_Health(roll_1, roll_2, roll_3);
+//		var armor : int = Calculate_Armor(roll_1, roll_2, roll_3);
+//		var speed : int = Calculate_Speed(roll_1, roll_2, roll_3);
+//		var magic_damage : int = Calculate_Magic_Damage(roll_1, roll_2, roll_3);
+//		var loot_num : int = (roll_1 * 70) + (roll_3 * 500);
+//		
+//		var random_monster : Monster = new Monster(name, damage, health, armor, speed, magic_damage, loot_num);
+//		
+//		return random_monster;
+//	}
+
+	private function Calculate_Monster_Spec(prefix_roll : int, type_roll : int) : monster_type
 	{
-		var health_calc : int = (quality_roll * 2) * prefix_roll + 1;
-		switch(type_roll)
-		{
-			case 0: health_calc /= .8;
-				break;
-			case 1:
-				break;
-			case 2: health_calc /= .9;
-				break;
+		var type : monster_type;
+		if(prefix_roll == 3 || prefix_roll ==  4 || prefix_roll == 5 || prefix_roll == 6){
+			switch(type_roll)
+			{
+				case 0: 
+					type = monster_type.fighter;
+					break;
+				case 1: 
+					type = monster_type.wizard;
+					break;
+				case 2: 
+					type = monster_type.ranger;
+					break;
+				case 3: 
+					type = monster_type.summoner;
+					break;
+			}
 		}
-		return health_calc;
-	}
-	
-	private function Calculate_Armor(prefix_roll : int, type_roll : int, quality_roll : int) : int
-	{
-		var armor_calc : int = (prefix_roll / 3) * (quality_roll / 3);
-		switch(type_roll)
+		else
 		{
-			case 0: 
-				armor_calc /= .9;
-				armor_calc += 1;
-				break;
-			case 1: 
-				break;
-			case 2: 
-				break;
-		}
-		return armor_calc;
+			type = monster_type.fighter;
+		} 
 	}
-	
-	private function Calculate_Speed(prefix_roll : int, type_roll : int, quality_roll : int)
-	{
-		var speed_calc : int = (prefix_roll / 3) * (quality_roll / 3);
-		switch(type_roll)
-		{
-			case 0: 
-				break;
-			case 1: 
-				break;
-			case 2: 
-				speed_calc /= .8;
-				speed_calc += 1;
-				break;
-		}
-		return speed_calc;
-	}
-	
-	private function Calculate_Magic_Damage(prefix_roll : int, type_roll : int, quality_roll : int)
-	{
-		var magic_damage_calc : int = (prefix_roll / 3) * (quality_roll / 3);
-		switch(type_roll)
-		{
-			case 0: 
-				break;
-			case 1: 
-				magic_damage_calc /= .7;
-				magic_damage_calc += 1;
-				break;
-			case 2: 
-				break;
-		}
-		return magic_damage_calc;
-	}
-	
-	private function Monster_Type(type_roll : int, quality_roll : int) : String
+
+	private function Monster_Type(prefix_roll : int, type_roll : int, quality_roll : int) : String
 	{
 		var type : String;
-		switch(type_roll)
+		if(prefix_roll == 3 || prefix_roll ==  4 || prefix_roll == 5 || prefix_roll == 6){
+			switch(type_roll)
+			{
+				case 0: 
+					type = Melee(quality_roll);
+					break;
+				case 1: 
+					type = Magic(quality_roll);
+					break;
+				case 2: 
+					type = Ranged(quality_roll);
+					break;
+				case 3: 
+					type = Magic(quality_roll);
+					break;
+			}
+		}
+		else
 		{
-			case 0: type = Melee(quality_roll);
-				break;
-			case 1: type = Magic(quality_roll);
-				break;
-			case 2: type = Ranged(quality_roll);
-				break;
+			type = Melee(quality_roll);
 		}
 		return type;
 	}
@@ -170,17 +178,11 @@
 		var melee : String;
 		switch(rolled_number)
 		{
-		case 1: melee = "Skirmisher";
+		case 0: melee = "Warrior";
 			break;
-		case 2: melee = "Brawler";
+		case 1: melee = "Gladiator";
 			break;
-		case 3: melee = "Assassinator";
-			break;
-		case 4: melee = "Warrior";
-			break;
-		case 5: melee = "Gladiator";
-			break;
-		case 6: melee = "Sentinel";
+		case 2: melee = "Sentinel";
 			break;
 		}
 		return melee;
@@ -191,17 +193,11 @@
 		var magic : String;
 		switch(rolled_number)
 		{
-		case 1: magic = "Warden";
+		case 0: magic = "Wizard";
 			break;
-		case 2: magic = "Magician";
+		case 1: magic = "Warlock";
 			break;
-		case 3: magic = "Sorcerer";
-			break;
-		case 4: magic = "Wizard";
-			break;
-		case 5: magic = "Warlock";
-			break;
-		case 6: magic = "SpellFlinger";
+		case 2: magic = "SpellFlinger";
 			break;
 		}
 		return magic;
@@ -212,17 +208,11 @@
 		var ranged : String;
 		switch(rolled_number)
 		{
-		case 1: ranged = "Tracker";
+		case 0: ranged = "Ranger";
 			break;
-		case 2: ranged = "Trickster";
+		case 1: ranged = "Hunter";
 			break;
-		case 3: ranged = "Scout";
-			break;
-		case 4: ranged = "Ranger";
-			break;
-		case 5: ranged = "Hunter";
-			break;
-		case 6: ranged = "Assassinator";
+		case 2: ranged = "Assassinator";
 			break;
 		}
 		return ranged;

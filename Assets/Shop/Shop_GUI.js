@@ -23,6 +23,7 @@
 	}
 	
 	function Populate(menu_items : Items[], new_name : String) {
+		sell = false;
 		name = new_name;
 		purchase_menu = new Items[menu_items.Length];
 		current_menu = new Items[purchase_menu.Length];
@@ -91,7 +92,7 @@
 			} 
 			else 
 			{
-				GUI.Box(new Rect(0, 0, 200, 100), "You need "+(curItem.Get_Price() - Inventory.Get_Gold())+" more gold to purchase: "+curItem.Get_Name()+".");
+				GUI.Box(new Rect(0, 0, 200, 100), "You need "+(curItem.Get_Price() - Inventory.Get_Gold())+"\nmore gold to purchase:\n"+curItem.Get_Name()+".");
 				if(GUI.Button(new Rect(50, 55, 75, 35), "OK")){
 					purchasing = false;
 				}
@@ -105,7 +106,7 @@
 			if(GUI.Button(new Rect(10, 55, 75, 35), "Yes")){
 				Inventory.Remove(curItem);		
 				selling = false;
-				player.Add_Gold(curItem.Get_Price() / 5);
+				Inventory.Add_Gold(curItem.Get_Price() / 5);
 			}
 			if(GUI.Button(new Rect(115, 55, 75, 35), "No")) {
 				selling = false;

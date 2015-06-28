@@ -31,6 +31,8 @@ public static class Armor_Generator
 	
 	function Generate_Specific(prefix : int, quality : int) : Armor
 	{
+		if(prefix > 99) prefix = 99;
+		if(quality > 5) quality = 5;
 		name = Prefix(roll_1) + Armor_Type(roll_3);
 		damage = Calculate_Damage(roll_1, roll_3);
 		speed = Calculate_Speed(roll_1, roll_3);

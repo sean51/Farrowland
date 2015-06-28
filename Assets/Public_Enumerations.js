@@ -15,3 +15,5 @@ public enum potion_type {heal, damage, armor, speed, magic_damage};
 public enum scroll_type {town, manhood, protection, damage};
 
 public enum spell_type {fireball};
+
+public enum monster_type {fighter, wizard, ranger, summoner};
