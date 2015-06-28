@@ -45,7 +45,7 @@ public class Master extends MonoBehaviour
 		Start_GUI();
 		Create_Zone(zone.town, 3);
 		//Give the player a random weapon
-		player.Add_Item(Weapon_Generator.Generate());
+		Inventory.Add(Weapon_Generator.Generate());
 		New_Area();
 		
 	}
@@ -59,6 +59,7 @@ public class Master extends MonoBehaviour
 		travel = gameObject.AddComponent.<Travel_GUI>();
 		inventory = gameObject.AddComponent.<Inventory_GUI>();
 		inventory.Populate(player.Get_Backpack(), player.Get_Equipped());
+		Inventory.Set(inventory);
 		player_text = gameObject.AddComponent.<Player_GUI>();
 		player_text.Set(player);
 		navigation = gameObject.AddComponent.<Navigation_GUI>();
@@ -226,6 +227,10 @@ public class Master extends MonoBehaviour
 						else if (k == position[0] + 1 && l == position[1] + 1)
 						{
 							current_zone[k, l] = new Magic_Shop(shop);
+						}
+						else if (k == position[0] && l == position[1] - 1)
+						{
+							current_zone[k, l] = new Amulet_Shop(shop);
 						}
 						else
 						{

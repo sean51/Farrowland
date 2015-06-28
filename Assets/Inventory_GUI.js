@@ -88,6 +88,18 @@ public class Inventory_GUI extends MonoBehaviour
 		equipped[old_item] = first_item;
 	}
 	
+	function Add_Item(new_item : Items)
+	{
+		for (var i : int = 0; i < backpack.length; i++)
+		{
+			if (backpack[i] == null)
+			{
+				backpack[i] = new_item;
+				break;
+			}
+		}
+	}
+	
 	function OnGUI ()
 	{
 		if(GUI.Button (new Rect (TOGGLE_START_X, TOGGLE_START_Y, TOGGLE_WIDTH, TOGGLE_HEIGHT), button_text))
@@ -211,5 +223,19 @@ public class Inventory_GUI extends MonoBehaviour
 			GUI.EndGroup();
 		}
 	}
+}
 
+public static class Inventory
+{
+	var relay : Inventory_GUI;
+	
+	public function Set(linked_object : Inventory_GUI)
+	{
+		relay = linked_object;
+	}
+	
+	public function Add (new_item : Items)
+	{
+		relay.Add_Item(new_item);
+	}
 }
