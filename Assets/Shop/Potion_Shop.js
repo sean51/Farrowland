@@ -11,7 +11,7 @@
 		var items : Items[] = new Items[12];
 		for (var i = 0; i < items.Length; i++) {
 			items[i] = new Potion();
-			items[i].Create_Random();
+			items[i] = items[i].Create_Random();
 		}
 		shop.Populate(items, "Potions");
 	}

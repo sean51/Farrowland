@@ -31,13 +31,12 @@
 	}
 	
 	function OnGUI() {
-		GUI.Button(new Rect(Screen.width/2 + 350, Screen.height/2 - 100 , 100, 35), "Exit");
 		GUI.BeginGroup(new Rect(Screen.width/2 - 310, Screen.height / 10, 630, 530));
 		GUI.Box(new Rect(10, 10, 600, 420), name);
 		for(i = 0; i < current_menu.Length; i++) {
 			if(current_menu[i])
 			{
-				if(GUI.Button(new Rect((200 * (i % 3)) + 20, (100 * Mathf.Floor(i % 4)) + 35, 90, 90), new GUIContent(current_menu[i].Get_Name(), current_menu[i].tooltip))){
+				if(GUI.Button(new Rect((200 * (i % 3)) + 20, (100 * Mathf.Floor(i % 4)) + 35, 90, 90), new GUIContent(current_menu[i].Get_Name(), current_menu[i].Get_Tooltip()))){
 					curItem = current_menu[i];
 					purchasing = true;
 				}
@@ -54,10 +53,11 @@
 			GUI.BeginGroup(new Rect(new Rect(Screen.width/2 - 500, Screen.height/3 - 100 , 200, 155)));
 //			if(player.getGold() >= curItem.price)
 //			{
-				GUI.Box(new Rect(0, 0, 200, 100), "Purchase: "+curItem.Get_Name()+"\nfor "+curItem.price+" gold?");
+				GUI.Box(new Rect(0, 0, 200, 100), "Purchase: "+curItem.Get_Name()+"\nfor "+curItem.Get_Price()+" gold?");
 				if(GUI.Button(new Rect(10, 55, 75, 35), "Yes")){
-					Debug.Log("Player spends: "+curItem.price+" gold.");
-					Debug.Log("Add: "+curItem.Get_Name()+" to inventory.");		
+					Inventory.Add(curItem);
+//					Debug.Log("Player spends: "+curItem.price+" gold.");
+//					Debug.Log("Add: "+curItem.Get_Name()+" to inventory.");		
 					purchasing = false;
 				}
 				if(GUI.Button(new Rect(115, 55, 75, 35), "No")) {

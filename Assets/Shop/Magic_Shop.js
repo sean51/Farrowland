@@ -11,7 +11,7 @@ public class Magic_Shop extends Area {
 		var items : Items[] = new Items[12];
 		for (var i = 0; i < items.Length; i++) {
 			items[i] = new Magic();
-			items[i].Create_Random();
+			items[i] = items[i].Create_Random();
 		}
 		shop.Populate(items, "Magic");
 	}

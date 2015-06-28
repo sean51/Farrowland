@@ -10,6 +10,8 @@ public class Battle_GUI extends MonoBehaviour
 	private var attack_order : Attributes[];
 	private var current_hero : Hero;
 	
+	private var loot : Items[];
+	
 	private var turn_counter : int;
 	private static var TURN_TIMER : float = .5f;
 	
@@ -42,6 +44,7 @@ public class Battle_GUI extends MonoBehaviour
 	
 	function Set_Fight(new_heroes : Hero[], new_enemies : Monster[])
 	{
+		loot = new Items[new_enemies.Length];
 		state = battle_state.idle;
 		meta_state = turn_state.idle;
 		turn_counter = 0;
@@ -176,7 +179,9 @@ public class Battle_GUI extends MonoBehaviour
 	
 	function Calculate_Loot()
 	{
-		
+		for(var k = 0; k < enemies.length; k++) {
+			loot[k] = Weapon_Generator.Generate();
+		}
 	}
 	
 	function OnGUI ()
@@ -270,11 +275,17 @@ public class Battle_GUI extends MonoBehaviour
 			GUI.Box(new Rect(0, 0, LOOT_WIDTH - Inventory_GUI.INFO_WIDTH - Inventory_GUI.ITEM_WIDTH, LOOT_HEIGHT), "LOOT");
 			GUI.Box(new Rect(LOOT_WIDTH - Inventory_GUI.INFO_WIDTH - Inventory_GUI.ITEM_WIDTH, 0, Inventory_GUI.INFO_WIDTH, LOOT_HEIGHT), "INFO");
 			GUI.Box(new Rect(LOOT_WIDTH - Inventory_GUI.ITEM_WIDTH, 0, Inventory_GUI.ITEM_WIDTH, LOOT_HEIGHT), "DONE");
-			for (var loot_index : int = 0; loot_index < 8; loot_index++)
+			for (var loot_index : int = 0; loot_index < loot.Length; loot_index++)
 			{
-				if(GUI.Button (new Rect (Inventory_GUI.ITEM_WIDTH * (loot_index % 4), Inventory_GUI.ITEM_START_Y + (Inventory_GUI.ITEM_HEIGHT * (loot_index / 4)), Inventory_GUI.ITEM_WIDTH, Inventory_GUI.ITEM_HEIGHT), "OK"))
+				if(loot[loot_index]) 
 				{
-					meta_state = turn_state.idle;
+					if(GUI.Button (new Rect (Inventory_GUI.ITEM_WIDTH * (loot_index % 4), Inventory_GUI.ITEM_START_Y + (Inventory_GUI.ITEM_HEIGHT * (loot_index / 4)), Inventory_GUI.ITEM_WIDTH, Inventory_GUI.ITEM_HEIGHT), new GUIContent(loot[loot_index].Get_Name(), loot[loot_index].Get_Tooltip())))
+					{
+						Inventory.Add(loot[loot_index]);
+						loot[loot_index] = null;
+					}
+					GUI.Label(new Rect (LOOT_WIDTH - Inventory_GUI.INFO_WIDTH - Inventory_GUI.ITEM_WIDTH, 15, Inventory_GUI.INFO_WIDTH, LOOT_HEIGHT), GUI.tooltip);
+					GUI.tooltip = null;
 				}
 			}
 			if(GUI.Button (new Rect (LOOT_WIDTH - Inventory_GUI.ITEM_WIDTH, (LOOT_HEIGHT / 2) - (Inventory_GUI.ITEM_HEIGHT / 2), Inventory_GUI.ITEM_WIDTH, Inventory_GUI.ITEM_HEIGHT), "OK"))
