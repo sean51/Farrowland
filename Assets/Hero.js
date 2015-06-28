@@ -9,9 +9,9 @@ public class Hero extends Attributes
 		backpack = new Items[12];
 		equipped = new Items[6];
 		name = "Hero";
-		damage = 6;
-		health = 40;
-		max_health = 40;
+		damage = 15;
+		health = 70;
+		max_health = 70;
 		armor = 5;
 		speed = 2;
 		magic_damage = 5;
