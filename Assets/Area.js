@@ -71,7 +71,7 @@ public class Area
 				current_enemies = new Monster[enemy_amount];
 				for(var i = 0; i < current_enemies.length; i++) 
 				{
-					current_enemies[i] = Monster_Generator.Generate();
+					current_enemies[i] = Monster_Generator.Generate(Random.Range(0, 100));
 				}
 				break;
 			case randomize < 9:

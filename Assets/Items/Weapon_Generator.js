@@ -45,10 +45,10 @@ public static class Weapon_Generator
 	
 	function Generate(seed : int) : Weapon
 	{
-		var percentage : float = seed / 1000;
-		roll_1 = Random.Range(10, Mathf.RoundToInt(100 * percentage));
+		var percentage : float = seed / 1000.0f;
+		roll_1 = Random.Range(10, Mathf.Max(10, Mathf.RoundToInt(100 * percentage)));
 		roll_2 = Random.Range(0, 3);
-		roll_3 = Random.Range(10, Mathf.RoundToInt(100 * percentage));
+		roll_3 = Random.Range(0, Mathf.RoundToInt(100 * percentage));
 		
 		name = Prefix(roll_1) + Weapon_Type(roll_2, roll_3);
 		damage = Calculate_Damage(roll_1, roll_2, roll_3);

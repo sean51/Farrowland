@@ -210,6 +210,7 @@ public class Battle_GUI extends MonoBehaviour
 		{
 			percent[k] = percent[k]/filled_amount;
 			loot_num_array[k] = Mathf.Round(loot_num*percent[k]);
+			//Debug.Log(loot_num_array[k]);
 			loot[k] = Weapon_Generator.Generate(loot_num_array[k]);
 		}
 		

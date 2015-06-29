@@ -16,6 +16,18 @@ public class Monster extends Attributes
 		my_type = monster_type.fighter;
 	}
 	
+	function Monster(monster_name : String, stats : int[])
+	{	
+		equipped = new Items[6];
+		name = monster_name;
+		damage = stats[0];
+		health = stats[1];
+		armor = stats[2];
+		speed = stats[3];
+		magic_damage = stats[4];
+		loot_number = stats[5];
+	}
+	
 	function Monster(monster_name : String, monster_loot_number : int, type : monster_type)
 	{
 		equipped = new Items[6];
